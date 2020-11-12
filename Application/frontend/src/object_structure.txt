@@ -1,0 +1,2 @@
+
+user=['id','mood','firstname','lastname','name','email','password','confirm password','occupation','location','aboutMe']

@@ -1,0 +1,7 @@
+.RoomList{
+    display: grid;
+    grid-template-columns: 15% 85%;
+}
+.list{
+    background-color: rgb(201, 202, 211);
+}

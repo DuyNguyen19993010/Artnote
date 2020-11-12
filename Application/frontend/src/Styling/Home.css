@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+.Home {
+  background-color: rgb(201, 201, 201);
+  max-width: 100%;
+  margin: 0;
+  height: 100vh;
+}
+/* ---------------------------------To drawing mode button-------------------------------- */
+.Home .toDR {
+  text-decoration: none;
+  color: aliceblue;
+  font-size: 230%;
+  position: fixed;
+  background-color: rgb(47, 45, 71);
+  border-radius: 75%;
+  width: 85px;
+  height: 70px;
+  text-align: center;
+  left:90%;
+  top:2%;
+}
+/* ---------------------------------Post area-------------------------------- */
+.Home .Posts {
+  align-items: center;
+  display: grid;
+  background-color: rgb(221, 221, 221);
+  height: 100%;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
+/* ---------------------------------Filter Type-------------------------------- */
+.Home .typeList{
+  overflow-x: scroll;
+  overflow-y: hidden;
+  display: flex;
+  white-space: nowrap;
+}
+.Home .typeList::-webkit-scrollbar{
+  width: 1;
+}
+.Home .typeList h2{
+  min-width: 280px;
+  background-color: rgb(185, 248, 213);
+  border-radius: 24px;
+  margin-right:3px;
+  text-align: center;
+}
+/* ---------------------------------Newfeed and discovery nav-------------------------------- */
+.Home .nav .navlink{
+  font-size: 50px;
+  text-decoration: none;
+  color: rgb(163, 180, 196);
+}
+.Home .nav .active_nav{
+  margin-right:13px;
+  color:rgb(22, 78, 231);
+  font-style: bold;
+  text-decoration: none;
+}

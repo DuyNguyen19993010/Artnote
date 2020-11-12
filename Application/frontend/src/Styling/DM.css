@@ -1,0 +1,22 @@
+.DM{
+    background-color: rgb(218, 218, 218);
+    max-width: 100%;
+    margin: 0;
+    height: 100vh;
+}
+.DM .colorPicker{
+    position: fixed;
+    left:80%;
+    top:5%;
+}
+.DM .Canvases{
+    background-color: White;
+    max-width: 100%;
+    width: 1000px;
+    height: 800px;
+    margin: 0;
+    border: black 1px ;
+    left:20%;
+    top:5%;
+    overflow: hidden;
+}

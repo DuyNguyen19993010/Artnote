@@ -1,0 +1,51 @@
+.Register .interests {
+  display: inline-block;
+}
+.Register .interests .interest {
+  width: 185px;
+  height: 90px;
+  border: black 9px;
+  margin: 10px;
+  background-color: rgb(191, 79, 206);
+}
+.Register .interests .inactive {
+  background-color: rgb(79, 98, 206);
+}
+
+.Register .interests .active {
+  background-color: rgb(191, 79, 206);
+}
+
+.UploadPost .interests {
+  display: inline-block;
+}
+.UploadPost .interests .interest {
+  width: 185px;
+  height: 90px;
+  border: black 9px;
+  margin: 10px;
+  background-color: rgb(191, 79, 206);
+}
+.UploadPost .interests .inactive {
+  background-color: rgb(79, 98, 206);
+}
+
+.UploadPost .interests .active {
+  background-color: rgb(191, 79, 206);
+}
+
+/* ------------------------------------------------------------ */
+.UploadArtwork .interests .interest {
+  width: 185px;
+  height: 90px;
+  border: black 9px;
+  margin: 10px;
+  background-color: rgb(191, 79, 206);
+}
+.UploadArtwork .interests .inactive {
+  background-color: rgb(79, 98, 206);
+}
+
+.UploadArtwork .interests .active {
+  background-color: rgb(191, 79, 206);
+}
