@@ -1,0 +1,10 @@
+*::-webkit-scrollbar {
+  display: none;
+}
+.App{
+    -ms-overflow-style: none;
+    background-attachment: fixed;
+    max-height: 100%;
+    overflow-y: hidden;
+}
+

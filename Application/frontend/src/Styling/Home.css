@@ -6,24 +6,11 @@
   vertical-align: baseline;
 }
 .Home {
-  background-color: rgb(201, 201, 201);
+  background-color: rgb(247, 247, 247);
   max-width: 100%;
   margin: 0;
   height: 100vh;
-}
-/* ---------------------------------To drawing mode button-------------------------------- */
-.Home .toDR {
-  text-decoration: none;
-  color: aliceblue;
-  font-size: 230%;
-  position: fixed;
-  background-color: rgb(47, 45, 71);
-  border-radius: 75%;
-  width: 85px;
-  height: 70px;
-  text-align: center;
-  left:90%;
-  top:2%;
+  overflow-y: scroll;
 }
 /* ---------------------------------Post area-------------------------------- */
 .Home .Posts {
@@ -46,20 +33,91 @@
 }
 .Home .typeList h2{
   min-width: 280px;
-  background-color: rgb(185, 248, 213);
   border-radius: 24px;
   margin-right:3px;
   text-align: center;
 }
 /* ---------------------------------Newfeed and discovery nav-------------------------------- */
 .Home .nav .navlink{
-  font-size: 50px;
+  font-size: 20px;
   text-decoration: none;
   color: rgb(163, 180, 196);
 }
 .Home .nav .active_nav{
   margin-right:13px;
-  color:rgb(22, 78, 231);
+  color:rgb(4, 63, 226);
   font-style: bold;
   text-decoration: none;
+}
+/* ---------------------------------------NewFeed styling---------------------- */
+/* ------------------------------------Banner------------------------------- */
+.Home .BannerBar{
+  background-color: rgb(19, 55, 216);
+  text-align: center;
+  color: white;
+  height: 15%;
+  z-index: 100;
+}
+
+.Home .BannerBar .Banner{
+  padding-top: 0.2%;
+  font-size: 100px;
+
+}
+.Home .functionality{
+  height: 10%;
+  margin-left: 4%;
+  margin-bottom: 1%;
+  align-items: center;
+  text-align: center;
+  padding-left:25% ;
+  display: grid;
+  grid-template-columns: 30% 40% 30%;
+}
+.Home .function{
+  color: rgb(72, 69, 88);
+  border-radius: 30px;
+  margin-left: 20px;
+  width: 250px;
+  box-shadow: 0 0 10px rgba(73, 73, 73, 0.966);
+  text-decoration: none;
+}
+/* ---------------------------------Card deck--------------------------- */
+
+.Home .card-deck {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+  margin-left: 2%;
+  row-gap: 3%;
+  z-index: 1;
+}
+.Home .card-deck .card,.Home .card-deck .card .card-img-top{
+  height: 300px;
+  width: 300px;
+}
+.Home .card-deck .card{
+  border: 2px black;
+}
+.Home .type{
+  position: relative;
+  margin-right: 2%;
+  cursor: pointer;
+}
+
+.Home .nav{
+  margin-left: 43%;
+}
+
+.Home .searchPost{
+  margin-top: 16px;
+  margin-left: 40%;
+  width: 30%;
+}
+.Home .searchPost input{
+  text-align: center;
+  font-size: 20px;
+  border-radius: 30px;
+  width: 60%;
+  height: 50px;
+  box-shadow: 0 0 10px rgba(73, 73, 73, 0.966);
 }

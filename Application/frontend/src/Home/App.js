@@ -13,6 +13,8 @@ import RoomList from "./needToImplementBackEnd/RoomList"
 //------------------------------Alert
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
+//--------------------------------Css
+import "../Styling/App.css";
 //--------------------------------------------------------------------------
 const App = () => {
   const [user, setUser] = useState({
@@ -43,7 +45,7 @@ const App = () => {
             </Route>
             {/*----------------------------------Drawing mode---------------------------------*/}
             
-            <Route path="/Paint">
+            <Route path="/RoomList/:filter">
               <RoomList/>
             </Route>
             
@@ -57,7 +59,7 @@ const App = () => {
               <Upload />
             </Route>
             {/*---------------------------------HomePage--------------------*/}
-            <Route path="/">
+            <Route path="/:interest?">
               <Home />
             </Route>
           </Switch>

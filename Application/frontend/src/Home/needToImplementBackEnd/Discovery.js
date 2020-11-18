@@ -2,11 +2,10 @@ import React from "react";
 import { useState, useContext } from "react";
 import { NavLink, Link, Route, BrowserRouter, Switch } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
-import Posts from "./Posts";
+import Post from "../Post";
 const Discovery = () => {
   //User context
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
   //Filters
   const NonNewFeedFilters = ["Trending", "Latest", "Following"];
   const [chosenFilter, chooseFilter] = useState(NonNewFeedFilters[0]);
@@ -21,22 +20,14 @@ const Discovery = () => {
   //--------------------------------------------------------------------------------
   return (
     <div className="Discovery">
-      <h1>This is the Discovery</h1>
-      <Posts posts={data} />
-      <ul>
-        {NonNewFeedFilters.map((filter) => {
-          return (
-            <li
-              onClick={() => {
-                chooseFilter(filter);
-              }}
-            >
-              {filter}
-            </li>
-          );
+      <div className="card-deck">
+        {data.map((post) => {
+          return (<div className="card">
+            <Post post={post}/>
+          </div>);
         })}
-      </ul>
-      <h1>Chosen filter is :{chosenFilter}</h1>
+      </div>
+      
     </div>
   );
 };

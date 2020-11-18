@@ -1,6 +1,7 @@
-.Posts {
+.Posts .card-deck{
   align-items: center;
   display: grid;
   height: 100%;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+  grid-template-columns: 20% 20% 20% 20%;
+  background-color: red;
 }

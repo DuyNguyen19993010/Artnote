@@ -2,6 +2,9 @@ import React from "react";
 import { useState, useContext } from "react";
 import { UserContext } from "../Context/UserContext";
 import Posts from "./needToImplementBackEnd/Posts";
+import Post from "./Post";
+//-----------------------------CSS------------------------
+import 'bootstrap/dist/css/bootstrap.min.css'
 const NewFeed = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
@@ -16,27 +19,30 @@ const NewFeed = (props) => {
     { id: 3, image: "/Resources/img3.jpg", PostIs: "Post" },
     { id: 4, image: "/Resources/img4.png", PostIs: "Post" },
     { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
+    { id: 5, image: "/Resources/img5.jpg", PostIs: "Post" },
   ]);
   //--------------------------------------------------------------------------------
   return (
     <div className="NewFeed">
-      <h1>This is the NewFeed</h1>
-      <Posts posts={data} />
-      <h1>Chosen type is {props.type}</h1>
-      <ul>
-        {NewFeedFilters.map((filter) => {
+      {/* <Posts posts={data} /> */}
+      <div className="card-deck">
+        {data.map((post) => {
           return (
-            <li
-              onClick={() => {
-                chooseFilter(filter);
-              }}
-            >
-              {filter}
-            </li>
+            <Post post={post}/>
           );
         })}
-      </ul>
-      <h1>Chosen filter is :{chosenFilter}</h1>
+      </div>
     </div>
   );
 };

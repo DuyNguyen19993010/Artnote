@@ -8,85 +8,38 @@ import NewFeed from "../NewFeed";
 import Discovery from "./Discovery";
 import GeneralForm from "./GeneralForm";
 import { useAlert } from "react-alert";
+import Modal from 'react-bootstrap/Modal'
+import { useForm } from "react-hook-form";
 const Home = (props) => {
   const history = useHistory();
   //User context: user:{ID,email,Valid}
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
   //Alert
+  //form
+  const { register, handleSubmit, errors } = useForm();
+  //alert
   const alert = useAlert();
   //type needed to be changed linked to database later
-  const [type, setType] = useState([
-    "All",
-    "illustration",
-    "Character design",
-    "Fantasy",
-    "Game Art",
-    "Concept Art",
-    "Anime & Manga",
-    "Anime & Manga",
-    "Anime & Manga",
-    "Anime & Manga"
-  ]);
-  //Chosen type
-  const [chosenType, chooseType] = useState(type[0]);
+  const [type, setType] = useState([]);
   //------------------------------Posts--------------------------------
-  useEffect(() => {});
+  useEffect(() => {
+    //-------------------Set available types-----------------------------
+    setType([
+      "All",
+      "illustration",
+      "Character design",
+      "Fantasy",
+      "Game Art",
+      "Concept Art",
+      "Anime & Manga",
+    ])
+
+  },[]);
   //search query to send to database
   const [query, setQuery] = useState("");
-  const handleSendData = (e) => {
-    console.log(query);
-  };
-  //----------------renderLogin/Reg Form----------------------------
-  const [showForm, toggleForm] = useState(false);
-  const renderForm = () => {
-    return (
-      <div>
-        <GeneralForm />
-        <button
-          onClick={() => {
-            toggleForm(false);
-          }}
-        >
-          X
-        </button>
-      </div>
-    );
-  };
-  //Decide to render login or logout
-  const renderLogin = () => {
-    if (!Valid) {
-      return (
-        <button
-          onClick={(e) => {
-            toggleForm(true);
-          }}
-        >
-          Login !
-        </button>
-      );
-    } else {
-      return (
-        <button
-          onClick={(e) => {
-            setUser({ ...user, Valid: false });
-          }}
-        >
-          Logout!
-        </button>
-      );
-    }
-  };
-  //Login checking,render user profile and go to user homepage
-  const toUserHomePage = () => {
-    //********************KEEP USER'S ID but Replace with Username Later*******************************
-    history.push("/UserHomePage/" + user.ID + "/Gallery");
-    // history.push("/UserHomePage");
-  };
-  const renderUserProfile = () => {
-    if (user.Valid) {
-      return <button onClick={toUserHomePage}>Profile</button>;
-    }
+  const handleSendData = (data) => {
+    console.log(data);
   };
   //user upload
   const upload = () => {
@@ -96,68 +49,56 @@ const Home = (props) => {
   //--------------------------------------------------------------------------------
   return (
     <div className="Home">
-      <NavLink className='toDR'to='/Paint'>paint</NavLink>
       {/*---------------------Banner-------------------------*/}
       <div className="BannerBar">
-        <h2 className="Banner">Artstation</h2>
-        {renderLogin()}
-        {renderUserProfile()}
-        <button
-          onClick={
-            Valid
-              ? upload
-              : () => {
-                  alert.show("Please sign in first");
-                }
-          }
-        >
-          Upload
-        </button>
+        <h2 className="Banner">ArtNote</h2>
       </div>
       {/*---------------------Search Bar------------------------*/}
-      <input
-        type="text"
-        placeholder="search"
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-        }}
-      />
-      <button onClick={handleSendData}>Search !</button>
-      {/*---------------------Nav bar-------------------------*/}
-      <nav className="nav">
-        <NavLink className='navlink' activeClassName='active_nav' to="/" exact={true}>New Feed</NavLink>
-        <NavLink className='navlink' activeClassName='active_nav' to="/Discovery">Discovery</NavLink>
-      </nav>
+      <form className="searchPost" onSubmit={handleSubmit(handleSendData)}>
+          <input placeholder="Search"
+            name="postName"
+            type="text"
+            ref={register({ required: true, minLength: 2 })}
+          />
+        </form>
+      <br/>
+      <div className="functionality card-deck">
+      <NavLink className='function'to='/Upload'><h2>Upload</h2></NavLink>
+      <NavLink className='function'to='/RoomList/Public'><h2>Draw and Connect</h2></NavLink>
+      <NavLink className='function'to='/'><h2>Login</h2></NavLink>
+        {/* <NavLink className='upload'to='/Upload'><h2>Upload an image</h2></NavLink> */}
+      </div>
+      <br/>
+
       {/*----------------------------Type-------------------------*/}
       <div className="typeList">
         {type.map((type) => {
           return (
-              <h2
-                onClick={(event) => {
-                  chooseType(type);
-                }}
-              >
+            <div  className="type">
+              <h2 style={{background:"url(https://cdna.artstation.com/p/assets/images/images/032/172/810/large/nerissa-mercer-lion.jpg?1605674363)"}} className="typeName">
                 {type}
               </h2>
+            </div>
           );
         })}
       </div>
+
+
+      {/*---------------------Nav bar-------------------------*/}
+      <nav className="nav">
+        <NavLink className='navlink' activeClassName='active_nav' to="/" exact={true}><h2>New Feed</h2></NavLink>
+        <NavLink className='navlink' activeClassName='active_nav' to="/Discovery"><h2>Discovery</h2></NavLink>
+      </nav>
       {/*-------------------------MAIN BODY------------------------*/}
       <div className="mainBody">
-        {showForm && user.Valid == false ? (
-          renderForm()
-        ) : (
-          <h1>Form not displayed</h1>
-        )}
         <Switch>
           {/*-------------------------Discovery------------------------*/}
-          <Route path="/Discovery">
+          <Route path="/Discovery/:interest?" exact>
             <Discovery />
           </Route>
           {/*-------------------------New Feed------------------------*/}
-          <Route path="/">
-            <NewFeed type={chosenType} />
+          <Route path="/:interest?" exact>
+            <NewFeed  />
           </Route>
         </Switch>
         {/*--------------------Check filter and type of post*/}

@@ -1,7 +1,123 @@
-.RoomList{
-    display: grid;
-    grid-template-columns: 15% 85%;
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+  }
+  /* ------------------------------main div------------------ */
+.Rooms{
+    position: relative;
+    background: rgba(13, 15, 65, 0.863) url(https://cdna.artstation.com/p/assets/images/images/032/144/020/large/hw-6523-20201116203648.jpg?1605607315);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height: 100vh;
+    overflow-y: scroll;
 }
-.list{
-    background-color: rgb(201, 202, 211);
+ /* ------------------------------Banner------------------ */
+ .Rooms .Logo{
+    background:  url(https://cdnb.artstation.com/p/assets/images/images/031/991/871/large/star-academy-22.jpg?1605168327) ;
+    background-size: auto;
+    background-repeat: no-repeat;
+    text-align: center;
+    height: 100px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(3, 1, 37, 0.966);
+ }
+ .Rooms .Logo h1{
+     align-self: center;
+     padding-top: 1%;
+     color: rgb(235, 235, 235);
+     text-shadow: 2px 3px rgb(19, 15, 49);
+ }
+/* -----------------------Search bar-------------------- */
+.Rooms .search{
+    margin-left: 40%;
+    width: 20%;
+    height: 60px;
+    top: 10%;
+    z-index: 1000;
+}
+.Rooms .search input{
+    box-shadow: 0 0 40px rgba(3, 1, 37, 0.966);
+    width: 100%;
+    text-align: center;
+    border-radius: 20px;
+    height: 45px;
+    font-size: 25px;
+    background-color: rgb(216, 216, 216);
+}
+/* -----------------------Filter-------------------- */
+.Rooms .filter{
+    height: 40px;
+    margin-bottom: 50px;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 10%;
+    margin-left: 45%;
+}
+.Rooms .filter .navlink{
+    text-align: center;
+    width: 90px;
+    color: rgb(209, 209, 209);
+    font-size: 20px;
+    text-decoration: none;
+}
+.Rooms .filter .active_nav{
+    width: 90px;
+    color: white;
+    border-radius: 10px;
+    padding-top: 5px;
+    font-size: 20px;
+    background-color: rgb(20, 114, 255);
+    text-decoration: none;
+    box-shadow: 0 0 40px rgba(3, 1, 37, 0.966);
+}
+/* -----------------Room-------------------- */
+.Rooms .card-deck{
+    margin:0;
+    margin-left: 4%;
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+    row-gap: 15%;
+    position: relative;
+    
+}
+.Rooms .card-deck .roomNameBanner {
+    border-radius: 10px 10px 0 0;
+    margin: 0;
+    background-color: rgb(226, 226, 226);
+    box-shadow: 0 4px 5px rgba(35, 32, 88, 0.966);
+    z-index: 50;
+    text-align: center;
+}
+.Rooms .card-deck .roomNameBanner h3{
+    margin: 0;
+    font-weight: 600;
+    cursor: pointer;
+    color: rgb(28, 12, 46);
+}
+.Rooms .card-deck .card{
+    box-shadow: 0 0 30px rgba(2, 0, 46, 0.966);
+    background-color: transparent;
+}
+.Rooms .card-deck .card-img-top{
+    border-radius: 0 0 15px 15px ;    
+    width: 320px;
+    height: 60px;
+    background-color: rgb(214, 214, 214);
+}
+.Rooms .card-deck .card{
+    overflow: hidden;
+    border-radius: 10px ;    
+    width: 320px;
+    height: 90px;
+    background-color: transparent;
+    border: black 4px;
+}
+.Rooms .card-deck .roomNameBanner :hover{
+    box-shadow: 0 7px 30px rgb(18, 17, 44);
+    transition: 0.1s;
 }

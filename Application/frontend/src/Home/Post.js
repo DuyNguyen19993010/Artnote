@@ -9,8 +9,8 @@ const Post = (props) => {
     history.push("/post/" + props.post.id);
   };
   return (
-    <div className="Post">
-      <img onClick={seePost} src={props.post.image} alt="image is not here" />
+    <div className="Post card">
+      <img className="card-img-top" src={props.post.image} alt="image is not here" />
     </div>
   );
 };
