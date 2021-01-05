@@ -22,7 +22,7 @@ const Comment = (props) => {
         width="30px"
         onClick={seeUser}
         src={props.comment.profilePic}
-        alt="image is not here"
+        alt="image is not her"
       />
       <div>
         <h2>
