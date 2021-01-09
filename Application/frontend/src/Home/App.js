@@ -10,6 +10,8 @@ import { LayerContext } from "../Context/LayerContext";
 import PostPage from "./PostPage";
 import Upload from "./needToImplementBackEnd/Upload";
 import RoomList from "./needToImplementBackEnd/RoomList"
+//-----------------------------Room---------------------
+import Room from "../Room/Room";
 //------------------------------Alert
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
@@ -47,6 +49,12 @@ const App = () => {
             
             <Route path="/RoomList/:filter">
               <RoomList/>
+            </Route>
+
+            {/*----------------------------------Room---------------------------------*/}
+            
+            <Route path="/Room/:roomName">
+              <Room/>
             </Route>
             
             {/*---------------------------------Post page--------------------------*/}

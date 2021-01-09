@@ -51,9 +51,10 @@ class Layer(models.Model):
 
 class Room(models.Model):
     room_name = models.CharField(max_length=30)
+    roomBackground = models.ImageField(blank=True, default=None)
     host = models.OneToOneField(Profile, on_delete=models.CASCADE)
     canvas = models.OneToOneField(
-        Canvas, on_delete=models.CASCADE, blank=True, default=None)
+        Canvas, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.room_name

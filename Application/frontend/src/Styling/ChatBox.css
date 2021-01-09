@@ -1,0 +1,19 @@
+#ChatBox{
+    position: fixed;
+    width: 250px;
+    height: 300px;
+    z-index: 150;
+    right: 10%;
+    bottom: 5%;
+}
+#ChatBox #chat-log{
+    background-color: red;
+    position: relative;
+    size: 100%;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+}
+#ChatBox #chat-message-input{
+    width: 100%;
+}
