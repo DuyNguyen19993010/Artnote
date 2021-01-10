@@ -49,6 +49,9 @@ const Home = (props) => {
   //--------------------------------------------------------------------------------
   return (
     <div className="Home">
+      <div className="GeneralForm-wrapper">
+        <GeneralForm/>
+      </div>
       {/*---------------------Banner-------------------------*/}
       <div className="BannerBar">
         <h2 className="Banner">ArtNote</h2>

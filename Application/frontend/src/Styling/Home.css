@@ -12,6 +12,14 @@
   height: 100vh;
   overflow-y: scroll;
 }
+/*------------------------Forms-----------------------------*/
+.Home .GeneralForm-wrapper{
+  position: fixed;
+  left: 35%;
+  background-color:  rgb(255, 255, 255);
+  width: 30%;
+  z-index: 10000;
+}
 /* ---------------------------------Post area-------------------------------- */
 .Home .Posts {
   align-items: center;

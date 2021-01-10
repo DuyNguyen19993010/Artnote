@@ -8,7 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 const NewFeed = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
-  console.log(user);
   //Filter
   const NewFeedFilters = ["Trending", "Latest"];
   const [chosenFilter, chooseFilter] = useState(NewFeedFilters[0]);

@@ -23,8 +23,6 @@ class Profile(models.Model):
     location = models.CharField(max_length=100)
     interest = models.ManyToManyField(Interest)
     aboutMe = models.TextField(max_length=256)
-    joinCode = models.CharField(
-        max_length=4, primary_key=False, default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return (self.fname + " "+self.lname)
@@ -38,26 +36,24 @@ class Follow(models.Model):
     follow_date = models.DateTimeField(
         auto_now_add=True, blank=True)
 # ----------------------------------------------------------------Room and canvases---------------------------------------------------
+class Room(models.Model):
+    room_name = models.CharField(max_length=30)
+    roomBackground = models.ImageField(blank=True, default=None)
+    host = models.OneToOneField(Profile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.room_name
 
 class Canvas(models.Model):
     canvas_name = models.CharField(max_length=30)
+    room = models.OneToOneField(
+        Room, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
 
 class Layer(models.Model):
     canvas = models.ForeignKey(Canvas, on_delete=models.CASCADE)
     image = models.ImageField(blank=True, default=None)
-
-
-class Room(models.Model):
-    room_name = models.CharField(max_length=30)
-    roomBackground = models.ImageField(blank=True, default=None)
-    host = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    canvas = models.OneToOneField(
-        Canvas, on_delete=models.CASCADE, blank=True, null=True, default=None)
-
-    def __str__(self):
-        return self.room_name
+    index = models.IntegerField(blank = False,default = 0)
 
 
 class Member(models.Model):

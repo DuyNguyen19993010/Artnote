@@ -17,26 +17,35 @@ const Register = (props) => {
   const { register, handleSubmit, errors } = useForm();
   const [options, setOption] = useState({
     list: [
-      { name: "All", toggled: false },
-      { name: "Illustrastion", toggled: false },
-      { name: "2D", toggled: false },
+      { id:"1",name: "All", toggled: false },
+      { id:"2",name: "Illustrastion", toggled: false },
+      { id:"3",name: "2D", toggled: false },
     ],
   });
   var interestToSend = [];
   const onSubmit = (data) => {
-    data.interest = options.list.map((choice, value) => {
-      if (choice.toggled) {
-        return choice.name;
-      }
-    });
-    data.interest = data.interest.filter(function (element) {
-      return element !== undefined;
-    });
-    console.log(data);
-    setUser({ ...user, Valid: true, ID: 1 });
-    // axios.get("http://localhost:8000/users/").then((res) => {
-    //   console.log(res.data);
+    // data.interest = options.list.map((choice, value) => {
+    //   if (choice.toggled) {
+    //     return choice.name;
+    //   }
     // });
+    // data.interest = data.interest.filter(function (element) {
+    //   return element !== undefined;
+    // });
+    let formData = new FormData()
+    formData.append('username',data.username)
+    formData.append('password1',data.password1)
+    formData.append('password2',data.password2)
+    formData.append('fname',data.fname)
+    formData.append('lname',data.lname)
+    formData.append('location',data.location)
+    formData.append('occupation',data.occupation)
+    formData.append('aboutMe',data.aboutMe)
+    console.log(data);
+    axios.post("http://localhost:8000/registration_view/",formData).then((res) => {
+      console.log(res.data);
+      setUser({ ...user, Valid: true, ID: res.data.id });
+    });
   };
 
   const addRemove = (key) => {
@@ -71,11 +80,11 @@ const Register = (props) => {
 
   return (
     <div className="Register">
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
         <label>FirstName</label>
         <br />
         <input
-          name="firstname"
+          name="fname"
           type="text"
           ref={register({ required: true, minLength: 2 })}
         />
@@ -85,28 +94,28 @@ const Register = (props) => {
         <label>LastName</label>
         <br />
         <input
-          name="lastname"
+          name="lname"
           type="text"
           ref={register({ required: true, minLength: 2 })}
         />
 
         <br />
 
-        <label>Email</label>
+        <label>Username</label>
         <br />
-        <input name="email" type="text" ref={register({ required: true })} />
+        <input name="username" type="text" ref={register({ required: true })} />
 
         <br />
 
         <label>Password</label>
         <br />
-        <input name="password" type="text" ref={register({ required: true })} />
+        <input name="password1" type="password" ref={register({ required: true })} />
 
         <br />
 
         <label>Confirm Password</label>
         <br />
-        <input name="confirm" type="text" ref={register({ required: true })} />
+        <input name="password2" type="password" ref={register({ required: true })} />
 
         <br />
 
@@ -124,23 +133,23 @@ const Register = (props) => {
 
         <label>About me:</label>
         <br />
-        <input name="location" type="textarea" ref={register} />
+        <input name="aboutMe" type="textarea" ref={register} />
 
         <br />
 
-        <label>Interest</label>
+        {/* <label>Interest</label>
         <br />
 
         <div className="interests">{renderInterestList()}</div>
-        <br />
+        <br /> */}
 
-        <label>Preview images</label>
+        {/* <label>Preview images</label>
         <br />
         <input
-          name="PreviewImage"
+          name="profile_pic"
           type="file"
           ref={register({ required: true })}
-        />
+        /> */}
         <input type="submit" />
       </form>
     </div>

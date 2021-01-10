@@ -10,17 +10,16 @@ const Login = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
-  //useHistory
-  const { history } = useHistory();
-  //use location
-  const { pathname } = useLocation();
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
-    setUser({ ...user, Valid: true, ID: 1 });
-    // axios.post("http://localhost:8000/users/").then((res) => {
-    //   console.log(res.data);
-    // });
+    let formData = new FormData()
+    formData.append('username',data.username)
+    formData.append('password',data.password)
+    axios.post("http://localhost:8000/login_view/",formData).then((res) => {
+      if(res.data.login){
+        setUser({ ...user, Valid: true, ID: 1 });
+      }
+    });
   };
 
   return (
@@ -29,8 +28,8 @@ const Login = (props) => {
         <label>Email</label>
         <br />
         <input
-          name="email"
-          type="email"
+          name="username"
+          type="text"
           ref={register({ required: true, minLength: 2 })}
         />
         <br />

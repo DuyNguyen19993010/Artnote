@@ -39,6 +39,7 @@ const App = () => {
       <AlertProvider template={AlertTemplate}>
         <UserContext.Provider value={{ user, setUser }} {...options}>
         <LayerContext.Provider value={{context,setContext}}>
+          
           <Switch>
             {/*---------------------------------User homepage--------------------*/}
             {/* <Route path="/UserHomePage/"> */}

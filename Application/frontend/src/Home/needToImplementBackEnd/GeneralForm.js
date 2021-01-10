@@ -32,16 +32,29 @@ const GeneralForm = (props) => {
     <div className="Form">
       <div>
         <div>
-          <h1 style={showLogin ? active : inactive} onClick={changeForm}>
-            {" "}
-            Login{" "}
-          </h1>
+          
+          {
+            Valid? (<h1 style={showLogin ? active : inactive} onClick={()=>{
+              axios.get("http://localhost:8000/logout_view/").then((res)=>{
+                if(!res.data.login){
+                  console.log('loggout')
+                  setUser({ ...user, Valid: false, ID: null });
+                }
+              })
+            }}>
+              {" "}
+              Log out{" "}
+            </h1> ) : (<h1 style={showLogin ? active : inactive} onClick={changeForm}>
+              {" "}
+              Login{" "}
+            </h1>)
+          }
 
           <h1 style={!showLogin ? active : inactive} onClick={changeForm}>
             Register
           </h1>
         </div>
-        <div>{showLogin ? <Login /> : <Register />}</div>
+        <div>{showLogin ? (Valid? (<span></span>) : <Login/>) : <Register />}</div>
       </div>
     </div>
   );
