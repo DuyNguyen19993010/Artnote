@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db import models
 import uuid
 # Create your models here.
+def image_upload_path(instance , filename):
+    return '/'.join(['images' ])
 # ------------------------------------------------------------------Profile----------------------------------------------------------------
 
 
@@ -38,7 +40,7 @@ class Follow(models.Model):
 class Room(models.Model):
     room_name = models.CharField(max_length=30)
     roomBackground = models.ImageField(blank=True, default=None)
-    host = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    host = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.room_name

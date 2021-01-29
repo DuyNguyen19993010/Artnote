@@ -48,8 +48,68 @@
     font-size: 25px;
     background-color: rgb(216, 216, 216);
 }
+.Rooms .addRoomButton img{
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* msie */
+    cursor: pointer;
+}
+.Rooms .addRoomButton img:hover{
+    opacity:1;
+    transition: 0.3s;
+}
+.Rooms .addRoomButton{
+    height:64px;
+    width:64px;
+    position: relative;
+    margin-left: 48.5%;
+    margin-bottom: 2%;
+}
+/* close form button */
+.Rooms .closeFormButton{
+    opacity: 0.4;
+    filter: alpha(opacity=40); /* msie */
+    cursor: pointer;    
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    position:relative;
+    right:10px;
+    top:10px;
+    position: absolute;
+}
+.Rooms .closeFormButton:hover{
+    opacity: 1;
+}
+/* -----------------------Room options--------------------- */
+
+.Rooms .options h1{
+    text-align: center;
+    color: white;
+    font-size: 150%;
+    background-color: rgb(34, 34, 46);
+    border-radius: 10px;
+}
+
+.Rooms .options{
+    box-shadow: 0 0 40px rgba(3, 1, 37, 0.966);
+    cursor: pointer;
+    position:absolute;
+    width: 40px;
+    height: 40px;
+    right: 10px ;
+    bottom: 20px;
+    background-color: white;
+    border-radius: 25px;
+    width: 50px;
+    height: 50px;
+}
+.Rooms .options:hover{
+    transform: rotate(360deg);
+    transition: 0.3s;
+}
 /* -----------------------Filter-------------------- */
 .Rooms .filter{
+    
     height: 40px;
     margin-bottom: 50px;
     z-index: 100;
@@ -59,6 +119,7 @@
     margin-left: 45%;
 }
 .Rooms .filter .navlink{
+    margin-right: 10%;
     text-align: center;
     width: 90px;
     color: rgb(209, 209, 209);
@@ -120,4 +181,41 @@
 .Rooms .card-deck .roomNameBanner :hover{
     box-shadow: 0 7px 30px rgb(18, 17, 44);
     transition: 0.1s;
+}
+
+/* -------------------RoomForm-------------------- */
+.Rooms .RoomForm{
+    background-color:  rgb(53, 67, 255);
+    position: absolute;
+    border-radius: 20px;
+    width: 30%;
+    left: 35%;
+    top:30%;
+    height: 23%;
+    text-align: center;
+    z-index: 1200;
+
+}
+.Rooms .RoomForm h1{
+    color: white;
+}
+.Rooms .RoomForm input{
+    margin-bottom: 5%;
+    align-self: center;
+    border: 1px rgb(71, 71, 71) solid;
+    border-radius: 5px;
+}
+.Rooms .RoomForm label{
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+}
+
+.Rooms .RoomForm .submitButton{ 
+    color: rgb(78, 78, 78);
+    font-weight: 500;
+    width: 90px;
+}
+.Rooms .RoomForm .submitButton:hover{ 
+    color: rgb(53, 67, 255);
+    transition: 0.2s;
 }

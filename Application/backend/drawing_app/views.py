@@ -33,6 +33,12 @@ class RoomViewSet(viewsets.ModelViewSet):
     serializer_class = RoomSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated,] 
+    def post(self, request , *arg, **kwargs):
+        room_name = request.POST['room_name']
+        roomBackground = request.POST['roomBackground']
+        host = User.objects.get(pk = request.POST['host'])
+        Profile.objects.create(fname = fname, lname =lname , occupation = occupation)
+        return JsonResponse({"hey":"Working"})
 # -----------------------User viewsets------------------------
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -47,8 +53,8 @@ class CustomObtainAuthToken(ObtainAuthToken):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    # authentication_classes = [TokenAuthentication, ]
-    # permission_classes = [IsAuthenticated,] 
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,] 
     def post(self, request , *arg, **kwargs):
         fname = request.POST['fname']
         lname = request.POST['lname']

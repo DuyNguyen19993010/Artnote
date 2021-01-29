@@ -13,7 +13,7 @@ const ProfileForm = (props) => {
   //Profile pic
   const [pic,setPic] = useState()   
   //useHistory
-  const { history } = useHistory();
+  const  history  = useHistory();
   //use location
   const { pathname } = useLocation();
   const { register, handleSubmit, errors } = useForm();
@@ -32,7 +32,7 @@ const ProfileForm = (props) => {
       console.log(pair[0]+ ', ' + pair[1]); 
     }
     axios.post("http://localhost:8000/api/profile/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
-      console.log("success")
+      history.push("/Home/")
     }).catch(error=>{
       console.error(error)
     });

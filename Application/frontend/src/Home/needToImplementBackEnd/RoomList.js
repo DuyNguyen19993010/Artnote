@@ -3,11 +3,16 @@ import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useForm } from "react-hook-form";
+import { useHistory, useLocation } from "react-router";
+//-----------------------------------Forms------------------------------
+import RoomForm from "./RoomForm"
 //-------------------------Routing-----------------------------
 import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
 //-----------------------css import ------------------------------------
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "../../Styling/RoomList.css";
+import axios from "axios";
+
 
 
 const RoomList = (props) => {
@@ -16,28 +21,47 @@ const RoomList = (props) => {
   const { Valid } = user;
   const [roomList,SetRoomList]= useState([]);
   let {filter} = useParams()
+  //useHistory
+  const history = useHistory();
   //-----------------------react form----------------
   const { register, handleSubmit, errors } = useForm();
   //Submit form
   const requestRoom = (data) => {
     console.log(data);
   };
+  console.log(roomList)
+  //Show RoomCreate form
+  const [showForm,toggleForm] = useState() 
   //-----------------------Set data for roomlist-----------------------
   useEffect(()=>{
-    console.log(filter)
     if(filter == "Joined"){
-      SetRoomList([{"roomName":"Room_1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room_2","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"},{"roomName":"Room 1","src":"https://i.pinimg.com/originals/0d/1a/84/0d1a84487eac50ad8ac4df921ce3c4c5.jpg"}])
+      axios.get("http://localhost:8000/api/room/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+        SetRoomList(res.data)
+      }).catch(error=>{
+          history.push("/")
+      });       
     }
     else{
-      SetRoomList([{"roomName":"Room_1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room_2","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"},{"roomName":"Room 1","src":"https://cdnb.artstation.com/p/assets/images/images/029/989/951/large/rossdraws-baby-faye-post.jpg?1599244529"}])
-  
+      axios.get("http://localhost:8000/api/room/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+        SetRoomList(res.data)
+      }).catch(error=>{
+          history.push("/")
+      });   
+      
     }
     },[filter])
-  
-
 
   return (
     <div className="Rooms">
+        {showForm? (<div className = "RoomForm">
+          <h1>Room Creation</h1>
+          <img className="closeFormButton" onClick={()=>{toggleForm(false)}} src="https://img.icons8.com/fluent-systems-filled/48/000000/x.png"/>
+          <RoomForm/>
+        </div>) :(<div>
+        </div>)}
+        <div className="options">
+        <img src="https://img.icons8.com/ios-filled/50/000000/menu-2.png"/>
+        </div>
       <div className="Logo">
         <h1>Bring your art closer</h1>
       </div>
@@ -51,6 +75,9 @@ const RoomList = (props) => {
           />
         </form>
         <br/>
+        <div className="addRoomButton">
+        <img onClick={()=>{toggleForm(true)}} src="https://img.icons8.com/cotton/64/000000/plus--v3.png"/>
+        </div>
         {/* ------------------------------Fitler---------------------------- */}
       <nav className="filter">
         <NavLink  className='navlink' activeClassName='active_nav' to="/RoomList/Public" exact={true}>Public</NavLink>
@@ -62,14 +89,14 @@ const RoomList = (props) => {
       <div className="card-deck">
         {
           roomList.map((room,key)=>{
-            return (<div className="room card" id={"room_"+key} >
+            return (<div key={key}  className="room card" id={"room_"+key} >
               {/* ------------NavLink used to go to room and set roomName parameter----- */}
-              <NavLink to={"/Room/"+room.roomName}>
+              <NavLink to={"/Room/"+room.room_name}>
                 <div className="roomNameBanner">
-                <h3>{room.roomName}</h3>
+                <h3>{room.room_name}</h3>
                 </div>
               </NavLink>
-              <img className="card-img-top" src={room.src}/>
+              <img className="card-img-top" src={room.roomBackground}/>
             </div>)
           })
         }

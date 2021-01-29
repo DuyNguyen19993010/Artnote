@@ -10,6 +10,8 @@ const Login = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
+  //useHistory
+  const  history  = useHistory();
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = (data) => {
     let formData = new FormData()
@@ -19,6 +21,7 @@ const Login = (props) => {
       if(res.data){
         console.log(res.data)
         setUser({ ...user, Valid: true, token: res.data.token ,ID:res.data.id});
+        history.push('/Home/')
       }
     }).catch(error =>{ 
       if(error.response.status == 400){

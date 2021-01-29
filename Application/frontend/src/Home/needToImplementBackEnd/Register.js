@@ -11,7 +11,7 @@ const Register = (props) => {
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
   //useHistory
-  const { history } = useHistory();
+  const history = useHistory();
   //use location
   const { pathname } = useLocation();
   const { register, handleSubmit, errors } = useForm();

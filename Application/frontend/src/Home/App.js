@@ -13,6 +13,8 @@ import Upload from "./needToImplementBackEnd/Upload";
 import RoomList from "./needToImplementBackEnd/RoomList"
 //-----------------------------Room---------------------
 import Room from "../Room/Room";
+//------------------------------Router------------------
+import { useHistory, useLocation } from "react-router";
 //------------------------------Alert
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
@@ -20,6 +22,7 @@ import AlertTemplate from "react-alert-template-basic";
 import "../Styling/App.css";
 //--------------------------------------------------------------------------
 const App = () => {
+  const  history  = useHistory();
   const [user, setUser] = useState({
     ID: "",
     email: "",
@@ -46,18 +49,19 @@ const App = () => {
             {/*---------------------------------User homepage--------------------*/}
             {/* <Route path="/UserHomePage/"> */}
             <Route path="/UserHomePage/:userName/:Tab">
-              <UserHome />
+              {user.Valid? (<UserHome />):(history.push('/'))}
             </Route>
             {/*----------------------------------Drawing mode---------------------------------*/}
             
             <Route path="/RoomList/:filter">
-              <RoomList/>
+              
+              {user.Valid? (<RoomList/>):(history.push('/'))}
             </Route>
 
             {/*----------------------------------Room---------------------------------*/}
             
             <Route path="/Room/:roomName">
-              <Room/>
+              {user.Valid? (<Room/>):(history.push('/'))}
             </Route>
             
             {/*---------------------------------Post page--------------------------*/}
@@ -67,7 +71,7 @@ const App = () => {
             </Route>
             {/* ----------------------------Upload-------------------------------- */}
             <Route path="/Upload">
-              <Upload />
+              {user.Valid? (<UserHome />):(history.push('/'))}
             </Route>
             {/*---------------------------------HomePage--------------------*/}
             <Route path="/Home/:interest?">

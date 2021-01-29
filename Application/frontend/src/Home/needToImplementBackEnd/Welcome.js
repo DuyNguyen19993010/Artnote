@@ -28,7 +28,7 @@ const Welcome = (props) => {
     <div className="welcome">
         <div className = "banner">
             <h1> Welcome to ArtNote</h1>
-        </div>
+        </div> 
         <div className = "Account-area">
                 {!showRegStage? (<div className ="Form"><div className ="RegisterForm">
                     <h1 className="FormName">Register</h1>
