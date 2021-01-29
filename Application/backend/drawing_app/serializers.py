@@ -20,15 +20,7 @@ class InterestSerializer(serializers.ModelSerializer):
         model = Interest
         fields = '__all__'
 class ProfileSerializer(serializers.ModelSerializer):
-    interest =  InterestSerializer()
     class Meta:
         model = Profile
-        fields = ['user','fname','lname','occupation','location', 'aboutMe','interest']
-    def create(self, validated_data):
-        # print(validated_data['interest'])
-        interests = validated_data.pop('interest')
-        profile = Profile.objects.create(**validated_data)
-        for interest in interests:
-            profile.interest.add(interest)
-        
-        return profile
+        fields = ['user','fname','lname','occupation','location', 'aboutMe','profile_pic']
+    

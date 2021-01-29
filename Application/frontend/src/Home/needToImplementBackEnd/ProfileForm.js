@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 import { NavLink, Link, Route, BrowserRouter, Switch } from "react-router-dom";
 import { useHistory, useLocation } from "react-router";
@@ -10,106 +10,69 @@ const ProfileForm = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
+  //Profile pic
+  const [pic,setPic] = useState()   
   //useHistory
   const { history } = useHistory();
   //use location
   const { pathname } = useLocation();
   const { register, handleSubmit, errors } = useForm();
-  const [options, setOption] = useState({
-    list: [
-      { id:"1",name: "All", toggled: false },
-      { id:"2",name: "Illustrastion", toggled: false },
-      { id:"3",name: "2D", toggled: false },
-    ],
-  });
-  var interestToSend = [];
+
   const onSubmit = (data) => {
-    // data.interest = options.list.map((choice, value) => {
-    //   if (choice.toggled) {
-    //     return choice.name;
-    //   }
-    // });
-    // data.interest = data.interest.filter(function (element) {
-    //   return element !== undefined;
-    // });
+    console.log(data)
     let formData = new FormData()
     formData.append('fname',data.fname)
     formData.append('lname',data.lname)
     formData.append('location',data.location)
     formData.append('occupation',data.occupation)
-    formData.append('aboutMe',data.aboutMe)    
-    // console.log(data);
-    axios.post("http://localhost:8000/api/user/registration_view/",formData).then((res) => {
-      console.log(res.data);
-      setUser({ ...user, Valid: true, ID: res.data.id });
+    formData.append('aboutMe',data.aboutMe)  
+    formData.append('profile_pic',pic)
+    formData.append('user',user.ID)
+    for (var pair of formData.entries()) {
+      console.log(pair[0]+ ', ' + pair[1]); 
+    }
+    axios.post("http://localhost:8000/api/profile/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+      console.log("success")
+    }).catch(error=>{
+      console.error(error)
     });
   };
 
-  const addRemove = (key) => {
-    let interestList = [...options.list];
-    if (!interestList[key].toggled) {
-      interestList[key].toggled = true;
-      interestToSend.push(interestList[key].name);
-    } else {
-      interestList[key].toggled = false;
-      for (let i = 0; i < interestToSend.length; i++) {
-        if (interestToSend[i] == interestList[key].name) {
-          interestToSend.splice(i, 1);
-        }
-      }
-    }
-    setOption({ ...options, list: interestList });
-  };
-  const toggleStyle = (key) => {
-    if (options.list[key].toggled) {
-      return "interest active";
-    } else {
-      return "interest inactive";
-    }
-  };
-  const renderInterestList = () => {
-    return options.list.map((choice, key) => {
-      return (
-        <div className={toggleStyle(key)} onClick={() => addRemove(key)}></div>
-      );
-    });
-  };
+
 
   return (
     <div className="Profile-initial">
       <form encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
+        <label>First Name</label>
+        <input name="fname" type="text" ref={register} />
+        <br />
+
+        <label>Last Name</label>
+        <input name="lname" type="text" ref={register} />
+        <br />
 
         <label>Occupation</label>
-        <br />
         <input name="occupation" type="text" ref={register} />
 
         <br />
 
         <label>Location</label>
-        <br />
         <input name="location" type="text" ref={register} />
 
         <br />
 
         <label>About me:</label>
-        <br />
         <input name="aboutMe" type="textarea" ref={register} />
 
         <br />
 
-        {/* <label>Interest</label>
-        <br />
-
-        <div className="interests">{renderInterestList()}</div>
-        <br /> */}
-
-        {/* <label>Preview images</label>
-        <br />
+        <label>Profile images</label>
         <input
+          onChange = {evt =>{setPic(evt.target.files[0])}}
           name="profile_pic"
           type="file"
           ref={register({ required: true })}
-        /> */}
+        /> 
         <input type="submit" />
       </form>
     </div>

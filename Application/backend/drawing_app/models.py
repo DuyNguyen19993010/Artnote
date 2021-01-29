@@ -21,7 +21,6 @@ class Profile(models.Model):
     lname = models.CharField(max_length=100)
     occupation = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    interest = models.ManyToManyField(Interest)
     aboutMe = models.TextField(max_length=256)
 
     def __str__(self):

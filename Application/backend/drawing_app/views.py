@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from rest_framework import viewsets 
 # Create your views here.
 from django.shortcuts import render
+# decorator
+from rest_framework.decorators import action
 # User authentication 
 from rest_framework.authentication import  TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -16,6 +18,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+# -------------------------Parser--------------------------
+from rest_framework.parsers import MultiPartParser,FormParser,FileUploadParser,JSONParser
 # ---------------------------Models--------------------------
 from .models import *
 # ----------------------------Serializer--------------------------
@@ -43,9 +47,26 @@ class CustomObtainAuthToken(ObtainAuthToken):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
+    # authentication_classes = [TokenAuthentication, ]
+    # permission_classes = [IsAuthenticated,] 
+    def post(self, request , *arg, **kwargs):
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        occupation = request.POST['occupation']
+        location = request.POST['location']
+        aboutMe = request.POST['aboutMe']
+        user = User.objects.get(pk =  request.POST['user'])
+        profile_pic = request.data['profile_pic']
+        Profile.objects.create(fname = fname, lname =lname , occupation = occupation,location= location,aboutMe =aboutMe,user = user , profile_pic = profile_pic)
+        return JsonResponse({"hey":"Working"})
+
+
+# -------------------------Interest viewsets-------------------
+class InterestViewSet(viewsets.ModelViewSet):
+    queryset = Interest.objects.all()
+    serializer_class = InterestSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated,] 
-
 # ---------------------Canvas views--------------------------
 # GET
 def canvas_get(request):
