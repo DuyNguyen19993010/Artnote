@@ -24,28 +24,36 @@ const Register = (props) => {
   });
   var interestToSend = [];
   const onSubmit = (data) => {
-    // data.interest = options.list.map((choice, value) => {
-    //   if (choice.toggled) {
-    //     return choice.name;
-    //   }
-    // });
-    // data.interest = data.interest.filter(function (element) {
-    //   return element !== undefined;
-    // });
     let formData = new FormData()
-    formData.append('username',data.username)
-    formData.append('password1',data.password1)
-    formData.append('password2',data.password2)
-    formData.append('fname',data.fname)
-    formData.append('lname',data.lname)
-    formData.append('location',data.location)
-    formData.append('occupation',data.occupation)
-    formData.append('aboutMe',data.aboutMe)
-    console.log(data);
-    axios.post("http://localhost:8000/registration_view/",formData).then((res) => {
-      console.log(res.data);
-      setUser({ ...user, Valid: true, ID: res.data.id });
-    });
+    if(data.password1 == data.password2){
+      formData.append('username',data.username)
+      formData.append('password',data.password1)
+      axios.post("http://localhost:8000/api/user/",formData).then((res) => {
+        console.log(res.data);
+        // Get token from server
+        axios.post("http://localhost:8000/auth/",formData).then((resp) => {
+          console.log(resp.data);
+          setUser({ ...user, token: resp.data.token ,ID:resp.data.id });
+        }).catch(er => {
+          if(er.response.status == 400){
+            alert("User already existed")
+          }  
+          else if(er.response.status != 400 && er.response.status != 200){
+            alert("Please log in")
+          } 
+        })
+
+      }).catch(error => {
+        if(error.response.status == 400){
+          alert("User already existed")
+        }else if(error.response.status != 400 && error.response.status != 200){
+            alert("Please log in")
+          } 
+      })
+    }
+    else{
+      alert("Passwords are not the same")
+    }
   };
 
   const addRemove = (key) => {
@@ -81,76 +89,22 @@ const Register = (props) => {
   return (
     <div className="Register">
       <form encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
-        <label>FirstName</label>
-        <br />
-        <input
-          name="fname"
-          type="text"
-          ref={register({ required: true, minLength: 2 })}
-        />
 
-        <br />
-
-        <label>LastName</label>
-        <br />
-        <input
-          name="lname"
-          type="text"
-          ref={register({ required: true, minLength: 2 })}
-        />
-
-        <br />
-
-        <label>Username</label>
-        <br />
+        <label>Username: </label>
+        
         <input name="username" type="text" ref={register({ required: true })} />
 
         <br />
 
-        <label>Password</label>
-        <br />
+        <label>Password: </label>
         <input name="password1" type="password" ref={register({ required: true })} />
 
         <br />
 
-        <label>Confirm Password</label>
-        <br />
+        <label>Confirm Password: </label>
         <input name="password2" type="password" ref={register({ required: true })} />
-
         <br />
-
-        <label>Occupation</label>
-        <br />
-        <input name="occupation" type="text" ref={register} />
-
-        <br />
-
-        <label>Location</label>
-        <br />
-        <input name="location" type="text" ref={register} />
-
-        <br />
-
-        <label>About me:</label>
-        <br />
-        <input name="aboutMe" type="textarea" ref={register} />
-
-        <br />
-
-        {/* <label>Interest</label>
-        <br />
-
-        <div className="interests">{renderInterestList()}</div>
-        <br /> */}
-
-        {/* <label>Preview images</label>
-        <br />
-        <input
-          name="profile_pic"
-          type="file"
-          ref={register({ required: true })}
-        /> */}
-        <input type="submit" />
+        <input className="submitButton" type="submit" />
       </form>
     </div>
   );

@@ -1,7 +1,15 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+# Django rest frame work
+from rest_framework import viewsets 
 # Create your views here.
 from django.shortcuts import render
+# User authentication 
+from rest_framework.authentication import  TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 # ----------------------------User account --------------------------
 from .form import ProfileForm
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
@@ -14,25 +22,29 @@ from .models import *
 from .serializers import *
 # ------------------------------Form---------------------------
 from .form import *
-# -------------------Room views---------------------------
-# GET
-def room_get(request,room_id):
-    room_queryset = Room.objects.get(pk = room_id )
-    rooms = RoomSerializer(room_queryset)
-    return JsonResponse(rooms.data)
-    
-# POST
-def room_post(request):
-    room_form = RoomForm(request.POST,request.FILES)
 
-
-    print("This is room post")
-# PUT
-def room_put(request):
-    print("This is room put")
-# DELETE
-def room_delete(request):
-    print("This is room delete")
+# -------------------Room viewsets---------------------------
+class RoomViewSet(viewsets.ModelViewSet):
+    queryset = Room.objects.all()
+    serializer_class = RoomSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,] 
+# -----------------------User viewsets------------------------
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+# Token authentication
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({'token': token.key, 'id': token.user_id})
+# -----------------------User viewsets------------------------
+class ProfileViewSet(viewsets.ModelViewSet):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,] 
 
 # ---------------------Canvas views--------------------------
 # GET
@@ -66,43 +78,8 @@ def request_post(request):
 # DELETE
 def request_delete(request):
     print("This is request delete")
-# ---------------------Profile views-------------------------
-# Log in
-@csrf_exempt
-def login_view(request):
-    user_form = AuthenticationForm(data = request.POST)
-    if(user_form.is_valid()):
-        user = user_form.get_user()
-        login(request,user)
-        return JsonResponse({"login":True})
-    else:
-        return JsonResponse({"Status":"Not logged in"})
-# Registration
-@csrf_exempt
-def registration_view(request):
-    user_form = UserCreationForm(request.POST)
-    registration_form = ProfileForm(request.POST, request.FILES)
-    if(user_form.is_valid() and registration_form.is_valid()):
-        user = user_form.save()
-        profile = registration_form.save(False)
-        profile.user = user
-        profile.save()
-        registration_form.save_m2m()
-        login(request,user)
 
-        return JsonResponse({"id":user.id,"login":True})
-    else:
-        return JsonResponse({"Status":"Not logged in"})
-# Log out
-def logout_view(request):
-    if(request.user.is_authenticated):
-        print("Logging out")
-        logout(request)
-        return JsonResponse({"login":False})
-    else:
-        print("Can not Log out")
 
-        return JsonResponse({"login":True})
         
 
 

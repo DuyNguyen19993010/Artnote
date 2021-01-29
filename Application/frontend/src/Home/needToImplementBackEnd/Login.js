@@ -15,33 +15,39 @@ const Login = (props) => {
     let formData = new FormData()
     formData.append('username',data.username)
     formData.append('password',data.password)
-    axios.post("http://localhost:8000/login_view/",formData).then((res) => {
-      if(res.data.login){
-        setUser({ ...user, Valid: true, ID: 1 });
+    axios.post("http://localhost:8000/auth/",formData).then((res) => {
+      if(res.data){
+        console.log(res.data)
+        setUser({ ...user, Valid: true, token: res.data.token ,ID:res.data.id});
       }
+    }).catch(error =>{ 
+      if(error.response.status == 400){
+        alert("User does not exist or credentials are incorrect")
+      }else if(error.response.status != 400 && error.response.status != 200){
+        alert("Please log in")
+      }       
     });
   };
 
   return (
     <div className="Login">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <label>Email</label>
-        <br />
+        <label>Username: </label>
+ 
         <input
           name="username"
           type="text"
           ref={register({ required: true, minLength: 2 })}
         />
         <br />
-        <label>Password</label>
-        <br />
+        <label>Password: </label>
         <input
           name="password"
           type="password"
           ref={register({ required: true, minLength: 2 })}
         />
         <br />
-        <input type="submit" />
+        <input className="submitButton" type="submit" />
       </form>
     </div>
   );

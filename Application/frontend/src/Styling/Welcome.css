@@ -1,0 +1,76 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+  }
+/* -----------------------Banner---------------------------- */
+.welcome{
+    height: 100%;
+    background-color: rgb(247, 247, 247);
+    max-width: 100%;
+    margin: 0;
+    height: 100vh;  
+    display: grid;
+    grid-template-rows: 10% 90% ;
+}
+.banner {
+    background-color: rgb(53, 67, 255);
+    color:white;
+    text-align: center;
+    height: 100%;
+}
+
+/* -------------------Account area-------------------- */
+.Account-area{
+    background-color: rgb(247, 247, 247);
+    height: 100%;
+}
+.Account-area .Form{
+    border-radius: 20px;
+    width: 50%;
+    background-color:  rgb(53, 67, 255);
+    margin-left: 25%;
+    margin-top: 5%;
+    display: grid;
+    text-align: center;
+    grid-template-columns: 45% 10% 45%;
+    overflow-y: scroll;
+}
+.Account-area .Form .FormName{
+    color: rgb(247, 247, 247);
+}
+/* -------Form---------- */
+.Account-area .Form form{
+    position: relative;
+    text-align: center;
+    height: 200px;
+}
+.Account-area .Form form label{
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+}
+.Account-area .Form form input{
+    position: relative;
+    border: 1px rgb(71, 71, 71) solid;
+    border-radius: 5px;
+    margin-bottom: 5%;
+
+}
+.Account-area .Form form .submitButton{ 
+    color: rgb(78, 78, 78);
+    font-weight: 500;
+    width: 90px;
+}
+.Account-area .Form form .submitButton:hover{ 
+    color: rgb(53, 67, 255);
+    transition: 0.2s;
+}
+.verticalLine{
+    margin-left: 40%;
+    align-self: center;
+    height: 85%;
+    width: 1px;
+    background-color: grey ;
+}

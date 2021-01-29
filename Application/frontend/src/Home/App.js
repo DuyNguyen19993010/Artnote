@@ -7,6 +7,7 @@ import { NavLink,Route, Switch } from "react-router-dom";
 import { UserContext } from "../Context/UserContext";
 import { LayerContext } from "../Context/LayerContext";
 //-----------------------------Pages
+import Welcome from "./needToImplementBackEnd/Welcome"
 import PostPage from "./PostPage";
 import Upload from "./needToImplementBackEnd/Upload";
 import RoomList from "./needToImplementBackEnd/RoomList"
@@ -23,6 +24,7 @@ const App = () => {
     ID: "",
     email: "",
     Valid: false,
+    token: null
   });
   const [context,setContext] = useState([])
   const options = {
@@ -68,8 +70,12 @@ const App = () => {
               <Upload />
             </Route>
             {/*---------------------------------HomePage--------------------*/}
-            <Route path="/:interest?">
+            <Route path="/Home/:interest?">
               <Home />
+            </Route>
+            {/*---------------------------------Register/Login--------------------*/}
+            <Route path="/">
+                <Welcome/>              
             </Route>
           </Switch>
           </LayerContext.Provider>
