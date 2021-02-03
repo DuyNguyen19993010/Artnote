@@ -63,8 +63,9 @@ class ProfileViewSet(viewsets.ModelViewSet):
         aboutMe = request.POST['aboutMe']
         user = User.objects.get(pk =  request.POST['user'])
         profile_pic = request.data['profile_pic']
-        Profile.objects.create(fname = fname, lname =lname , occupation = occupation,location= location,aboutMe =aboutMe,user = user , profile_pic = profile_pic)
-        return JsonResponse({"hey":"Working"})
+        new_profile = Profile.objects.create(fname = fname, lname =lname , occupation = occupation,location= location,aboutMe =aboutMe,user = user , profile_pic = profile_pic)
+        new_profile = ProfileSerializer(new_profile)
+        return JsonResponse(new_profile.data)
 
 
 # -------------------------Interest viewsets-------------------
@@ -73,6 +74,20 @@ class InterestViewSet(viewsets.ModelViewSet):
     serializer_class = InterestSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated,] 
+# ---------------------Member views--------------------------
+class MemberViewSet(viewsets.ModelViewSet):
+    queryset = Member.objects.all()
+    serializer_class = MemberSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,]
+    def post(self, request , *arg, **kwargs):
+        user_req = request.POST['user']
+        room_req = request.POST['room']
+        user = User.objects.get(pk = user_req)
+        room = Room.objects.get(pk = room_req)
+        new_member = Member.objects.create(user = user , room = room)
+        new_member = MemberSerializer(new_member)
+        return JsonResponse(new_member.data)
 # ---------------------Canvas views--------------------------
 # GET
 def canvas_get(request):
@@ -84,16 +99,6 @@ def canvas_post(request):
 def canvas_put(request):
     print("This is canvas put")
 
-# ---------------------Member views--------------------------
-# GET
-def member_get(request):
-    print("This is member GET")
-# POST
-def member_post(request):
-    print("This is member post")
-# DELETE
-def member_delete(request):
-    print("This is member delete")
 
 # ---------------------Request views-------------------------
 # GET

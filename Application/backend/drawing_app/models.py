@@ -58,10 +58,12 @@ class Layer(models.Model):
 
 
 class Member(models.Model):
+    class Meta:
+        unique_together = ('room','user')
     room = models.ForeignKey(
-        Room, on_delete=models.CASCADE, blank=True, null=True)
+        Room, on_delete=models.CASCADE)
     user = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, blank=True, null=True)
+        User, on_delete=models.CASCADE)
 
     def __str__(self):
         return (str(self.user) + " is a member of " + (str(self.room)))
