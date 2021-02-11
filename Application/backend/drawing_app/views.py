@@ -4,6 +4,8 @@ from django.http import JsonResponse
 from rest_framework import viewsets 
 # Create your views here.
 from django.shortcuts import render
+# Library
+from django.http import QueryDict
 # decorator
 from rest_framework.decorators import action
 # User authentication 
@@ -32,13 +34,34 @@ class RoomViewSet(viewsets.ModelViewSet):
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
     authentication_classes = [TokenAuthentication, ]
-    permission_classes = [IsAuthenticated,] 
-    def post(self, request , *arg, **kwargs):
+    permission_classes = [IsAuthenticated,]
+    def create(self, request , *arg, **kwargs):
         room_name = request.POST['room_name']
-        roomBackground = request.POST['roomBackground']
+        roomBackground = request.data['roomBackground']
         host = User.objects.get(pk = request.POST['host'])
-        Profile.objects.create(fname = fname, lname =lname , occupation = occupation)
-        return JsonResponse({"hey":"Working"})
+        room = Room.objects.create(host= host , room_name = room_name,roomBackground = roomBackground)
+        Member.objects.create(room = room,user = host)
+        room = RoomSerializer(room)
+        return JsonResponse(room.data,safe =  False)
+@csrf_exempt
+def joinedRoom(request):
+        # --------------------Find room that this member has joined--------------------
+        roomJoinedQuery = Member.objects.filter(user = User.objects.get(pk=request.POST['user']))
+        # -------------------------Serializes to get all the room ids------------------
+        joinedRooms = joinedRoomSerializer(roomJoinedQuery,many=True)
+        # ---------------Store room ids in a list for filtering-------------
+        room_ids = [None] * len(joinedRooms.data)
+        for i in range(0, len(room_ids)):
+            room_ids[i] = joinedRooms.data[i]['room']
+        # ---------------------Query the rooms in the list----------------------
+        roomQuery= Room.objects.filter(pk__in=room_ids)
+        rooms = RoomSerializer(roomQuery,many=True)
+        print(rooms.data)
+        # ---------------------Adding backend's server domain to image url---------------
+        for i in range(0,len(rooms.data)):
+            rooms.data[i]['roomBackground'] = 'http://'+ request.META['HTTP_HOST'] +rooms.data[i]['roomBackground'] 
+        return JsonResponse(rooms.data,safe=False) 
+
 # -----------------------User viewsets------------------------
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -49,7 +72,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'id': token.user_id})
-# -----------------------User viewsets------------------------
+# -----------------------Profile viewsets------------------------
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
@@ -88,6 +111,16 @@ class MemberViewSet(viewsets.ModelViewSet):
         new_member = Member.objects.create(user = user , room = room)
         new_member = MemberSerializer(new_member)
         return JsonResponse(new_member.data)
+    def delete(self, request , *arg, **kwargs):
+        data = request.data
+        Member.objects.get(user = User.objects.get(pk = data['user']),room = Room.objects.get(pk=data['room'])).delete()
+        roomQuery = Room.objects.get(pk =data['room'])
+        # Check if theres anyone else left as a member of the room ,delete the room if there isnt anyone
+        noOfMemQuery = Member.objects.filter(room = roomQuery)
+        NumRoomMember = len(MemberSerializer(noOfMemQuery,many=True).data)
+        if(NumRoomMember <= 0):
+            roomQuery.delete()
+        return JsonResponse({"Delete":"success"})
 # ---------------------Canvas views--------------------------
 # GET
 def canvas_get(request):

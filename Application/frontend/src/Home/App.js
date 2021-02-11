@@ -85,6 +85,9 @@ const App = () => {
           </LayerContext.Provider>
         </UserContext.Provider>
       </AlertProvider>
+      <a href="https://icons8.com/icon/U5AcCk9kUWMk/enter">Enter icon by Icons8</a>
+      <a href="https://icons8.com/icon/dAcwnJsJdfDH/export">Export icon by Icons8</a>
+      <a href="https://icons8.com/icon/103162/plus">Plus icon by Icons8</a>
     </div>
   );
 };

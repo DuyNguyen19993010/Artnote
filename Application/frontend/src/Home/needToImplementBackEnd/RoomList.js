@@ -35,10 +35,13 @@ const RoomList = (props) => {
   //-----------------------Set data for roomlist-----------------------
   useEffect(()=>{
     if(filter == "Joined"){
-      axios.get("http://localhost:8000/api/room/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+      let formdata = new FormData()
+      formdata.append('user',user.ID)
+      axios.post("http://localhost:8000/api/joinedRoom/",formdata,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+        console.log(res.data)
         SetRoomList(res.data)
       }).catch(error=>{
-          history.push("/")
+          alert("Error")
       });       
     }
     else{
@@ -50,7 +53,32 @@ const RoomList = (props) => {
       
     }
     },[filter])
-
+  //--------------------Add member to room--------------------
+  const joinRoom = (roomID)=>{
+    console.log(user.ID)
+    console.log(roomID)
+    let formData = new FormData()
+    formData.append('user',user.ID)
+    formData.append('room',roomID)
+    axios.post("http://localhost:8000/api/member/",formData,{headers:{'Authorization':"Token "+user.token}}).then((res) => {
+        console.log(res.data)
+      }).catch(error=>{
+        console.log(error)
+      })
+  }
+  const leaveRoom = (roomID)=>{
+    console.log(user.ID)
+    console.log(roomID)
+    let formData = new FormData()
+    formData.append('user',user.ID)
+    formData.append('room',roomID)
+    axios.delete("http://localhost:8000/api/member/",{headers:{'Authorization':"Token "+user.token},data:{'user':user.ID,'room':roomID}}).then((res) => {
+        console.log(res.data)
+        SetRoomList(roomList.filter(room => room.id != roomID))
+      }).catch(error=>{
+        console.log(error)
+      })
+  }
   return (
     <div className="Rooms">
         {showForm? (<div className = "RoomForm">
@@ -91,11 +119,20 @@ const RoomList = (props) => {
           roomList.map((room,key)=>{
             return (<div key={key}  className="room card" id={"room_"+key} >
               {/* ------------NavLink used to go to room and set roomName parameter----- */}
-              <NavLink to={"/Room/"+room.room_name}>
+              {filter != "Joined"? (
+                <div>
+                  <div className="roomNameBanner">
+                  <h3>{room.room_name}</h3>
+                  </div>
+                <button onClick={()=>joinRoom(room.id)} className="join-delete-room-button"><img src="https://img.icons8.com/plasticine/32/000000/plus.png"/></button>
+                </div>
+              ):(<div>
                 <div className="roomNameBanner">
                 <h3>{room.room_name}</h3>
                 </div>
-              </NavLink>
+                <button className="go-to-room-button"><NavLink className="room-navlink" to={"/Room/"+room.room_name}><img src="https://img.icons8.com/fluent/32/000000/enter-2.png"/></NavLink></button>
+                <button onClick={()=>leaveRoom(room.id)} className="join-delete-room-button"><img src="https://img.icons8.com/fluent/32/000000/export.png"/></button>
+              </div>)}
               <img className="card-img-top" src={room.roomBackground}/>
             </div>)
           })

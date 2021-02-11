@@ -27,4 +27,8 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
+class joinedRoomSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Member
+        fields = ['room']
     

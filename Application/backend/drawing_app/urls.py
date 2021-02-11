@@ -11,6 +11,8 @@ router.register('room' , views.RoomViewSet)
 router.register('interest' , views.InterestViewSet)
 router.register('member' , views.MemberViewSet)
 
+
 urlpatterns = [
     path('',include(router.urls)),
+    path('joinedRoom/',views.joinedRoom)
 ]
