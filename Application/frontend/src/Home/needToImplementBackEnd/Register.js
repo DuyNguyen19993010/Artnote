@@ -10,6 +10,7 @@ const Register = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
+  const { username } = user;
   //useHistory
   const history = useHistory();
   //use location

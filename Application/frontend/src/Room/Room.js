@@ -8,11 +8,23 @@ import DrawingMode from "../Home/needToImplementBackEnd/DrawingMode";
 import ChatBox from "./Chatbox";
 //-------------------------Routing-----------------------------
 import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
+// -----------Axios-----------------
+import axios from "axios";
 //---------------------------------Start websocket--------------------
 
 const Room = (props) => {  
   //-----------------------------Room Name--------------------------------
-  const {roomName} = useParams();
+  const {roomID} = useParams();
+  const [roomName, SetRoomName]= useState("");
+  useEffect(()=>{
+    axios.get("http://localhost:8000/api/room_get/"+roomID+"/").then((resp) => {
+          console.log(resp.data);
+          SetRoomName(resp.data.room_name)
+          props.setRegStage(true)
+        }).catch(er=>{
+          console.log(er)
+        })
+  },[])
 
   //-------------------------Handle drawing and messaging-----------------------------
   return (
@@ -22,10 +34,10 @@ const Room = (props) => {
       <NavLink  className='navlink' activeClassName='active_nav' to="/" exact={true}>Back to Home</NavLink>
       {/* -------------------------ChatBox--------------------------- */}
       <div id="ChatBox-wrapper">
-        <ChatBox roomName={roomName}/>
+        <ChatBox roomID={roomID}/>
       </div>
       {/* -----------------Drawing mode---------------- */}
-      <DrawingMode/>
+      <DrawingMode roomID={roomID}/>
     </div>
   );
 };

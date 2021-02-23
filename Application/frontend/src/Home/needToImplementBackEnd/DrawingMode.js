@@ -4,6 +4,7 @@ import { LayerContext } from "../../Context/LayerContext";
 import "../../Styling/DM.css";
 import Canvas from './Canvas';
 import {SketchPicker} from 'react-color'
+
 const DM = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
@@ -14,11 +15,11 @@ const DM = (props) => {
   
   const renderLayers = ()=>{
     return canvases.Layers.map((layer,index)=>{
-      return <Canvas selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1000} height={800} brush={brush} brushColor={color}/>
+      return <Canvas roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1000} height={800} brush={brush} brushColor={color}/>
     })
   }
   //------------------------------------------------------------------------------
-  
+  // ------------------Choose which layer to draw on-------------------------
   const toggleLayer = (layerNo)=>{
     let toggledLayer =[...canvases.Layers]
     if(toggledLayer[layerNo].hidden){
@@ -29,6 +30,7 @@ const DM = (props) => {
     }
     setCanvas({...canvases,Layers:toggledLayer})
   }
+  // --------------------Handling layer selection-----------------------
   const layerSystem = ()=>{
     return canvases.Layers.map((layer,index)=>{
     return (<><input type='radio' checked={selectedLayer == layer.no} value={layer.no} onChange={(e)=>{SelectLayer(e.target.value)}}/>Layer {layer.no}:<button onClick={()=>toggleLayer(layer.no)}>{layer.hidden?(<h1>Show</h1>):(<h1>Hide</h1>)}</button><br/></>)

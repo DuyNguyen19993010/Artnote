@@ -43,6 +43,11 @@ class RoomViewSet(viewsets.ModelViewSet):
         Member.objects.create(room = room,user = host)
         room = RoomSerializer(room)
         return JsonResponse(room.data,safe =  False)
+def room_get(request,room_id):
+    room_queryset = Room.objects.get(pk = room_id)
+    room = RoomSerializer(room_queryset)
+    return JsonResponse(room.data)
+
 @csrf_exempt
 def joinedRoom(request):
         # --------------------Find room that this member has joined--------------------
@@ -89,6 +94,12 @@ class ProfileViewSet(viewsets.ModelViewSet):
         new_profile = Profile.objects.create(fname = fname, lname =lname , occupation = occupation,location= location,aboutMe =aboutMe,user = user , profile_pic = profile_pic)
         new_profile = ProfileSerializer(new_profile)
         return JsonResponse(new_profile.data)
+def profile_get(request,user_id):
+    user_queryset = User.objects.get(pk = user_id)
+    profile_queryset = Profile.objects.get(user= user_queryset)
+    user = UserSerializer(user_queryset)
+    prof= ProfileSerializer(profile_queryset)
+    return JsonResponse({"profile":prof.data,"user":user.data})
 
 
 # -------------------------Interest viewsets-------------------

@@ -10,6 +10,8 @@ const Login = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
+  const {profile} = user;
+  const {username} = user;
   //useHistory
   const  history  = useHistory();
   const { register, handleSubmit, errors } = useForm();
@@ -20,8 +22,12 @@ const Login = (props) => {
     axios.post("http://localhost:8000/auth/",formData).then((res) => {
       if(res.data){
         console.log(res.data)
-        setUser({ ...user, Valid: true, token: res.data.token ,ID:res.data.id});
+        let my_token = res.data.token
+        axios.get("http://localhost:8000/api/profile_get/"+res.data.id+"/").then(res=>{
+
+        setUser({ ...user, Valid: true, token: my_token,profile:res.data.profile ,ID:res.data.user.id,username:res.data.user.username});
         history.push('/Home/')
+        })
       }
     }).catch(error =>{ 
       if(error.response.status == 400){

@@ -25,8 +25,9 @@ const App = () => {
   const  history  = useHistory();
   const [user, setUser] = useState({
     ID: "",
-    email: "",
+    username: "",
     Valid: false,
+    profile:null,
     token: null
   });
   const [context,setContext] = useState([])
@@ -60,7 +61,7 @@ const App = () => {
 
             {/*----------------------------------Room---------------------------------*/}
             
-            <Route path="/Room/:roomName">
+            <Route path="/Room/:roomID">
               {user.Valid? (<Room/>):(history.push('/'))}
             </Route>
             

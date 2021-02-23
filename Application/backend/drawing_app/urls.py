@@ -14,5 +14,7 @@ router.register('member' , views.MemberViewSet)
 
 urlpatterns = [
     path('',include(router.urls)),
-    path('joinedRoom/',views.joinedRoom)
+    path('joinedRoom/',views.joinedRoom),
+    path('profile_get/<int:user_id>/',views.profile_get),
+    path('room_get/<int:room_id>/',views.room_get)
 ]

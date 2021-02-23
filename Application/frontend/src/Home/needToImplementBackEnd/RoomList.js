@@ -130,7 +130,7 @@ const RoomList = (props) => {
                 <div className="roomNameBanner">
                 <h3>{room.room_name}</h3>
                 </div>
-                <button className="go-to-room-button"><NavLink className="room-navlink" to={"/Room/"+room.room_name}><img src="https://img.icons8.com/fluent/32/000000/enter-2.png"/></NavLink></button>
+                <button className="go-to-room-button"><NavLink className="room-navlink" to={"/Room/"+room.id}><img src="https://img.icons8.com/fluent/32/000000/enter-2.png"/></NavLink></button>
                 <button onClick={()=>leaveRoom(room.id)} className="join-delete-room-button"><img src="https://img.icons8.com/fluent/32/000000/export.png"/></button>
               </div>)}
               <img className="card-img-top" src={room.roomBackground}/>

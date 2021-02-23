@@ -10,6 +10,8 @@ const ProfileForm = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
   const { Valid } = user;
+  const {profile} = user;
+  const {username} = user;
   //Profile pic
   const [pic,setPic] = useState()   
   //useHistory
@@ -32,7 +34,11 @@ const ProfileForm = (props) => {
       console.log(pair[0]+ ', ' + pair[1]); 
     }
     axios.post("http://localhost:8000/api/profile/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
-      history.push("/Home/")
+      axios.get("http://localhost:8000/api/profile_get/"+user.ID+"/").then(resp=>{
+        setUser({ ...user, Valid: true,profile:resp.data.profile ,ID:resp.data.user.id,username:resp.data.user.username});
+        console.log(user)
+        history.push('/Home/')
+        })
     }).catch(error=>{
       console.error(error)
     });

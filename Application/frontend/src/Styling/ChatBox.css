@@ -7,7 +7,7 @@
     bottom: 5%;
 }
 #ChatBox #chat-log{
-    background-color: red;
+    background-color: rgb(184, 184, 184);
     position: relative;
     size: 100%;
     width: 100%;
