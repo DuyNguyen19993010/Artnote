@@ -7,16 +7,153 @@
 .DM .colorPicker{
     position: fixed;
     left:80%;
-    top:5%;
+    top:4%;
 }
 .DM .Canvases{
     background-color: White;
     max-width: 100%;
-    width: 1000px;
-    height: 800px;
+    width: 1200px;
+    height: 700px;
     margin: 0;
     border: black 1px ;
     left:20%;
     top:5%;
     overflow: hidden;
+    position: fixed;
+    left:15%;
+    top:15%;
+}
+.DM .tool-circle-wrapper{
+    position: fixed;
+    right:50%;
+    bottom:5%;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.DM .tool-circle-wrapper .circles{
+    width: 50px;
+    height: 50px;
+    border-radius: 25px;
+    text-align: center;
+    margin-right:5px ;
+}
+.DM .tool-circle-wrapper .circles .circle{
+    align-self: center;
+    margin-top: 4px;
+}
+
+/* ---------------Styling layersystem------------- */
+.DM .Layers{
+    position: fixed;
+    right: 5%;
+    bottom: 30%;
+    background-color: #E5E5E5;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(100, 100, 100, 0.966);
+}
+.DM .Layers .layer-sytem-banner,.DM .Layers .layer-sytem-footer{
+    background-color: #303030;
+    text-align: center;
+    color: white;
+    height: 35px;
+}
+.DM .Layers .layer-sytem-banner{
+    border-radius: 5px 5px 0px 0px;
+    -webkit-user-select: none;  /* Chrome all / Safari all/ Can not highlight image */
+    -moz-user-select: none;     /* Firefox all/ Can not highlight image */
+}
+.DM .Layers .layer-sytem-footer {
+    border-radius: 0px 0px 5px 5px;
+}
+.DM .Layers .layer-sytem-footer button{
+    margin-top: 5px;
+    border-radius: 5px;
+    width: 100px;
+    border-radius: 5px 5px 5px 5px;
+    -webkit-user-select: none;  /* Chrome all / Safari all/ Can not highlight image */
+    -moz-user-select: none;     /* Firefox all/ Can not highlight image */
+}
+.DM .Layers .layer-sytem-body{
+    -webkit-user-select: none;  /* Chrome all / Safari all/ Can not highlight image */
+    -moz-user-select: none;     /* Firefox all/ Can not highlight image */
+    height: 230px;
+    overflow-y: scroll;
+}
+.DM .Layers .layer-sytem-body .each-layer{
+
+    border:black 1px solid;
+    width: 100%;
+    height: 50px;
+    z-index: 5;
+    display: grid;
+    grid-template-columns: 15% 15% 70%;
+}
+.DM .Layers .layer-sytem-body .each-layer .preview-frame{
+    width: 100%;
+    height: 100%;
+    border-bottom:black 1px solid;
+    border-left:black 2px solid;
+    border-right:black 2px solid;
+}
+.DM .Layers .layer-sytem-body .each-layer .preview-frame img{
+    width: 40px;
+    height: 40px;
+    margin: 0%;
+}
+.DM .Layers .layer-sytem-body .each-layer .select-layer-panel{
+    
+    border-bottom:black 1px solid;
+    margin: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+.DM .Layers .layer-sytem-body .each-layer .select-layer-panel:hover{
+
+    transition: 0.4s;
+    cursor: pointer;
+}
+.DM .Layers .layer-sytem-body .each-layer .toggle-visible-layer-button{
+    border:black 1px solid;
+}
+.DM .Layers .layer-sytem-body .each-layer .toggle-visible-layer-button img{
+    cursor: pointer;
+    margin-left: 8px ;
+    margin-top: 14px;
+}
+
+.DM .optionBar{
+    background-color: #303030;
+    position: fixed;
+    width: 100%;
+    height: 4%;
+}
+.DM .toolBar{
+    background-color: #303030;
+    position: fixed;
+    top:4.2%;
+    width: 60px;
+    height: 100%;
+}
+.DM .toolBar .tool-box{
+    transition:0.3s;
+    display: block;
+    text-align: center;
+    margin: 4px;
+    margin-bottom: 20px;
+    background-color: #6D6D6D;
+    border-radius: 40px;
+    width: 50px;
+    height: 50px;
+
+}
+.DM .toolBar .active-tool-box{
+    background-color: #0773FF;
+}
+.DM .toolBar .tool-box .tool-icon{
+    -webkit-user-select: none;  /* Chrome all / Safari all/ Can not highlight image */
+    -moz-user-select: none;     /* Firefox all/ Can not highlight image */
+    cursor: pointer;
+    margin-top: 7px;
 }

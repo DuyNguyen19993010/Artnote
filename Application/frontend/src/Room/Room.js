@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import "../Styling/Room.css";
 import {useHistory } from "react-router";
 import {useState,useContext} from "react";
 import {w3cwebsocket} from "websocket"
@@ -10,6 +9,8 @@ import ChatBox from "./Chatbox";
 import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
 // -----------Axios-----------------
 import axios from "axios";
+// -------CSS----------
+import "../Styling/Room.css";
 //---------------------------------Start websocket--------------------
 
 const Room = (props) => {  
@@ -29,9 +30,12 @@ const Room = (props) => {
   //-------------------------Handle drawing and messaging-----------------------------
   return (
     <div className="Room">
-    {/* --------Room Name--------------- */}
-      <h1>Room: {roomName}</h1>
-      <NavLink  className='navlink' activeClassName='active_nav' to="/" exact={true}>Back to Home</NavLink>
+      {/* <div className = "optionBar"> 
+
+      </div>
+      <div className = "toolBar"> 
+
+      </div> */}
       {/* -------------------------ChatBox--------------------------- */}
       <div id="ChatBox-wrapper">
         <ChatBox roomID={roomID}/>

@@ -3,7 +3,7 @@
     width: 250px;
     height: 300px;
     z-index: 150;
-    right: 10%;
+    right: 30%;
     bottom: 5%;
 }
 .Room #ChatBox #chat-log{
@@ -16,3 +16,4 @@
 .Room #ChatBox #chat-message-input{
     width: 100%;
 }
+
