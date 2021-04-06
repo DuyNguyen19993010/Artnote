@@ -1,0 +1,132 @@
+.PostPage {
+    background-color: #E5E5E5;
+    height: 100vh;
+}
+.PostPage .post-wrapper{
+    position: absolute;
+    left:292px;
+    top:114px;
+    height: 782px;
+    width: 606px;
+  }
+  .PostPage .post-wrapper .post-author-wrapper{
+    height: 73px;
+    width: 606px;
+    background-color: white;
+  }
+  .PostPage .post-wrapper .post-author-wrapper .header{
+    color: #303030;
+    font-size: 34px;
+    position: absolute;
+    left:77px;
+    top:10px;
+    font-weight: 39px;
+  }
+  
+  .PostPage .post-wrapper .post-image-wrapper {
+    width: 606px;
+    height: 709px;
+    background-color: black;
+  }
+  .PostPage .post-wrapper .post-image-wrapper img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+    
+  }
+
+  .PostPage .post-wrapper .like-wrapper{
+      position: absolute;
+      left:500px;
+      width: 100px;
+  }
+  .PostPage .post-wrapper .like-wrapper .like-number{
+      position: absolute;
+      font-size: 35px;
+      top:10px;
+      left:10px;
+  }
+  .PostPage .post-wrapper .like-wrapper .like-icon{
+      position: absolute;
+      left:50px;
+      top:10px;
+  }
+  /* Comment  */
+  .PostPage .post-comment-wrapper{
+      background-color: white;
+      width: 626px;
+      height: 780px;
+      position: absolute;
+      left:1048px;
+      top:114px;
+
+  }
+  .PostPage .post-comment-wrapper .post-comment-header{
+      background-color: #0773FF;
+      color: white;
+      text-align: center;
+      height: 71px;
+  }  
+  .PostPage .post-comment-wrapper .post-comment-header h2{
+      font-size: 20px;
+      position: absolute;
+      left:270px;
+      top:20px;
+      
+    } 
+    .PostPage .post-comment-wrapper .post-comment-comments{
+        display: block;
+        height: 707px;
+        overflow-y: scroll;   
+    } 
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper{
+        display: block;
+        width: 578px;
+        height: 134px;
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+    
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment-author-wrapper{
+        display: inline;
+        float: left;
+        background-color: #616161;
+        height: 44px;
+        width: 578px;
+    }
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment-author-wrapper .profile-pic{
+        width: 36px;
+        height: 36px;
+        margin: 0;
+        margin-left: 5px;
+        margin-top: 5px;
+        float:left;
+
+    }
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment-author-wrapper .profile-pic img{
+        height: 100%; 
+        width: 100%; 
+        border-radius: 25px;
+        margin: 0%;
+        object-fit: cover;
+    }
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment-author-wrapper .username{
+        width: 20px;
+        margin: 0px;
+        color: white;  
+        float: left;
+        margin-top: 10px;
+        margin-left: 10px;    
+    }
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment-author-wrapper .username h3{
+        font-size: 20px;
+    }
+    .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper .comment{
+        border-left:1px #7070704f solid;
+        border-right:1px #7070704f solid;
+        border-bottom:1px #7070704f solid;
+        height: 90px;    
+        word-wrap: break-word;
+        width: 578px;
+        overflow: scroll;    
+    }

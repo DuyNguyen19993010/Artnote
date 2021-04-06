@@ -49,9 +49,9 @@ const App = () => {
           <Switch>
             {/*---------------------------------User homepage--------------------*/}
             {/* <Route path="/UserHomePage/"> */}
-            <Route path="/UserHomePage/:userName/:Tab">
+            {/* <Route path="/UserHomePage/:userName/:Tab">
               {user.Valid? (<UserHome />):(history.push('/'))}
-            </Route>
+            </Route> */}
             {/*----------------------------------Drawing mode---------------------------------*/}
             
             <Route path="/RoomList/:filter">
@@ -68,12 +68,11 @@ const App = () => {
             {/*---------------------------------Post page--------------------------*/}
             <Route path="/post/:id">
               <PostPage />
-              <NavLink to="/">Go back home</NavLink>
             </Route>
             {/* ----------------------------Upload-------------------------------- */}
-            <Route path="/Upload">
+            {/* <Route path="/Upload">
               {user.Valid? (<UserHome />):(history.push('/'))}
-            </Route>
+            </Route> */}
             {/*---------------------------------HomePage--------------------*/}
             <Route path="/Home/:interest?">
               <Home />

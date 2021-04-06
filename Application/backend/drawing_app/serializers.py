@@ -31,4 +31,7 @@ class joinedRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = ['room']
-    
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'

@@ -6,126 +6,68 @@
   vertical-align: baseline;
 }
 .Home {
-  background-color: rgb(247, 247, 247);
-  max-width: 100%;
-  margin: 0;
+  background-color: #E5E5E5;
+  width: 100%;
   height: 100vh;
-  overflow-y: scroll;
 }
-/*------------------------Forms-----------------------------*/
-.Home .GeneralForm-wrapper{
+/* Post type */
+.Home .feed-area .posts .post-0{
   position: fixed;
-  left: 35%;
-  background-color:  rgb(255, 255, 255);
-  width: 30%;
-  z-index: 10000;
+  top:131px;
+  left:206px
 }
-/* ---------------------------------Post area-------------------------------- */
-.Home .Posts {
-  align-items: center;
-  display: grid;
-  background-color: rgb(221, 221, 221);
-  height: 100%;
-  grid-template-columns: 20% 20% 20% 20% 20%;
+.Home .feed-area .posts .post-1{
+  position: fixed;
+  top:131px;
+  left:900px
 }
-
-/* ---------------------------------Filter Type-------------------------------- */
-.Home .typeList{
-  overflow-x: scroll;
-  overflow-y: hidden;
-  display: flex;
-  white-space: nowrap;
+.Home .feed-area .posts .post-2{
+  position: fixed;
+  top:131px;
+  left:1387px;
 }
-.Home .typeList::-webkit-scrollbar{
-  width: 1;
+.Home .feed-area .posts .post-3{
+  position: fixed;
+  top:540px;
+  left:900px;
 }
-.Home .typeList h2{
-  min-width: 280px;
-  border-radius: 24px;
-  margin-right:3px;
-  text-align: center;
+.Home .feed-area .posts .post-4{
+  position: fixed;
+  top:540px;
+  left:1387px;
 }
-/* ---------------------------------Newfeed and discovery nav-------------------------------- */
-.Home .nav .navlink{
-  font-size: 20px;
-  text-decoration: none;
-  color: rgb(163, 180, 196);
-}
-.Home .nav .active_nav{
-  margin-right:13px;
-  color:rgb(4, 63, 226);
-  font-style: bold;
-  text-decoration: none;
-}
-/* ---------------------------------------NewFeed styling---------------------- */
-/* ------------------------------------Banner------------------------------- */
-.Home .BannerBar{
-  background-color: rgb(19, 55, 216);
-  text-align: center;
-  color: white;
-  height: 15%;
-  z-index: 100;
-}
-
-.Home .BannerBar .Banner{
-  padding-top: 0.2%;
-  font-size: 100px;
-
-}
-.Home .functionality{
-  height: 10%;
-  margin-left: 4%;
-  margin-bottom: 1%;
-  align-items: center;
-  text-align: center;
-  padding-left:25% ;
-  display: grid;
-  grid-template-columns: 30% 40% 30%;
-}
-.Home .function{
-  color: rgb(72, 69, 88);
-  border-radius: 30px;
-  margin-left: 20px;
-  width: 250px;
-  box-shadow: 0 0 10px rgba(73, 73, 73, 0.966);
-  text-decoration: none;
-}
-/* ---------------------------------Card deck--------------------------- */
-
-.Home .card-deck {
-  display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
-  margin-left: 2%;
-  row-gap: 3%;
-  z-index: 1;
-}
-.Home .card-deck .card,.Home .card-deck .card .card-img-top{
-  height: 300px;
+.Home .feed-area .filter-wrapper{
+  background-color: transparent;
   width: 300px;
-}
-.Home .card-deck .card{
-  border: 2px black;
-}
-.Home .type{
-  position: relative;
-  margin-right: 2%;
-  cursor: pointer;
-}
-
-.Home .nav{
-  margin-left: 43%;
-}
-
-.Home .searchPost{
-  margin-top: 16px;
-  margin-left: 40%;
-  width: 30%;
-}
-.Home .searchPost input{
-  text-align: center;
-  font-size: 20px;
-  border-radius: 30px;
-  width: 60%;
   height: 50px;
-  box-shadow: 0 0 10px rgba(73, 73, 73, 0.966);
+  position: fixed;
+  top: 40px;
+  left:800px;
+}
+.Home .feed-area .filter-wrapper .filter{
+  position: absolute;
+}
+
+.Home .feed-area .filter-wrapper #popular-filter{
+  left:0px;
+  top:10px;
+}
+.Home .feed-area .filter-wrapper #latest-filter{
+  left:180px;
+  top:10px;
+}
+.Home .feed-area .filter-wrapper .filter{
+  font-size: 25px;
+  color: #7A7676;
+  width: 100px;
+  background-color: transparent;
+}
+.Home .feed-area .filter-wrapper button:focus{
+  outline:0;
+}
+.Home .feed-area .filter-wrapper .active{
+  margin: 0%;
+  color: white;
+  background-color: #0773FF;
+  border-radius: 22px;
 }

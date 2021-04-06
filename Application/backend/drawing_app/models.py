@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 from django.db import models
 import uuid
+from django.utils.timezone import now
 # Create your models here.
 def image_upload_path(instance , filename):
     return '/'.join(['images' ])
@@ -27,15 +28,6 @@ class Profile(models.Model):
 
     def __str__(self):
         return (self.fname + " "+self.lname)
-
-
-class Follow(models.Model):
-    user = models.ForeignKey(
-        User, related_name="follower", on_delete=models.CASCADE, blank=True, default=None)
-    following = models.ForeignKey(
-        User, related_name="following", on_delete=models.CASCADE, blank=True, default=None)
-    follow_date = models.DateTimeField(
-        auto_now_add=True, blank=True)
 # ----------------------------------------------------------------Room and canvases---------------------------------------------------
 class Room(models.Model):
     room_name = models.CharField(max_length=30)
@@ -67,23 +59,17 @@ class Member(models.Model):
 
     def __str__(self):
         return (str(self.user) + " is a member of " + (str(self.room)))
-# -------------------------------------------------------------Request----------------------------------------------------------------
-
-
-class Request(models.Model):
+# -----------------------------------Posts---------------------------------------
+class Post(models.Model):
+    user= models.ForeignKey(User, on_delete=models.CASCADE)
+    image = models.ImageField(blank = True, default= None)
+    interaction = models.IntegerField(blank= False, default = 0)
+    current_interaction = models.IntegerField(blank =False,default=0)
+    last_interaction = models.IntegerField(blank = False , default = 0)
+    last_update_date = models.DateTimeField(default = now())
+    published_date = models.DateTimeField(default = now())
+class Like(models.Model):
     class Meta:
-        unique_together = ('requester', 'room')
-    requester = models.OneToOneField(Profile, on_delete=models.CASCADE)
-    room = models.OneToOneField(Room, on_delete=models.CASCADE)
-
-
-class JoinRequest(Request):
-    def __str__(self):
-        return (str(self.requester)+" request to join "+str(self.room))
-
-
-class Invite(Request):
-    invited = models.OneToOneField(Profile, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return (str(self.requester)+" invited " + self.invited + " to join "+str(self.room))
+        unique_together = ('user','post')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

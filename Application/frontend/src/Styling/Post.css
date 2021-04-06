@@ -1,6 +1,163 @@
-.Post img {
-  background-color:transparent;
-  width: 350px;
-  height: 350px;
-  margin-bottom: 5%;
+/* Post type 0 */
+.post-0-wrapper{
+  height: 782px;
+  width: 606px;
+}
+.post-0-wrapper .post-author-wrapper{
+  height: 73px;
+  width: 606px;
+  background-color: white;
+}
+.post-0-wrapper .post-author-wrapper .header{
+  color: #303030;
+  font-size: 34px;
+  position: absolute;
+  left:77px;
+  top:10px;
+  font-weight: 39px;
+}
+
+.post-0-wrapper .post-image-wrapper {
+  width: 606px;
+  height: 709px;
+  background-color: black;
+}
+.post-0-wrapper .post-image-wrapper img{
+  height: 100%; 
+  width: 100%; 
+  object-fit: cover;
+  
+}
+/* ---------------------------Post type 1 -------------------------*/
+.post-1-wrapper{
+  height: 371px;
+  width: 399px;
+}
+.post-1-wrapper .post-author-wrapper{
+  height: 73px;
+  width: 399px;
+  background-color: white;
+}
+.post-1-wrapper .post-author-wrapper .header{
+  color: #303030;
+  font-size: 34px;
+  position: absolute;
+  left:77px;
+  top:10px;
+  font-weight: 39px;
+}
+
+.post-1-wrapper .post-image-wrapper {
+  width: 399px;
+  height: 298px;
+  background-color: black;
+}
+.post-1-wrapper .post-image-wrapper img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+}
+
+/* ---------------------------Post type 2 -------------------------*/
+.post-2-wrapper{
+  height: 371px;
+  width: 399px;
+}
+.post-2-wrapper .post-author-wrapper{
+  height: 73px;
+  width: 399px;
+  background-color: white;
+}
+.post-2-wrapper .post-author-wrapper .header{
+  color: #303030;
+  font-size: 34px;
+  position: absolute;
+  left:77px;
+  top:10px;
+  font-weight: 39px;
+}
+
+.post-2-wrapper .post-image-wrapper {
+  width: 399px;
+  height: 298px;
+  background-color: black;
+}
+.post-2-wrapper .post-image-wrapper img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+}
+/* ---------------------------Post type 3 -------------------------*/
+.post-3-wrapper{
+  height: 371px;
+  width: 399px;
+}
+.post-3-wrapper .post-author-wrapper{
+  height: 73px;
+  width: 399px;
+  background-color: white;
+}
+.post-3-wrapper .post-author-wrapper .header{
+  color: #303030;
+  font-size: 34px;
+  position: absolute;
+  left:77px;
+  top:10px;
+  font-weight: 39px;
+}
+
+.post-3-wrapper .post-image-wrapper {
+  width: 399px;
+  height: 298px;
+  background-color: black;
+}
+.post-3-wrapper .post-image-wrapper img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+}
+/* ---------------------------Post type 4 -------------------------*/
+.post-4-wrapper{
+  height: 371px;
+  width: 399px;
+}
+.post-4-wrapper .post-author-wrapper{
+  height: 73px;
+  width: 399px;
+  background-color: white;
+}
+.post-4-wrapper .post-author-wrapper .header{
+  color: #303030;
+  font-size: 34px;
+  position: absolute;
+  left:77px;
+  top:10px;
+  font-weight: 39px;
+}
+
+.post-4-wrapper .post-image-wrapper {
+  width: 399px;
+  height: 298px;
+  background-color: black;
+}
+.post-4-wrapper .post-image-wrapper img{
+    height: 100%; 
+    width: 100%; 
+    object-fit: cover;
+}
+
+.post-author-wrapper .profile_pic_wrapper{
+  background-color: white;
+  width: 52px;
+  height: 52px;
+  border-radius: 30px;
+  position: absolute;
+  left:10px;
+  top:9px;
+}
+.post-author-wrapper .profile_pic_wrapper img{
+  height: 100%; 
+  width: 100%; 
+  border-radius: 30px;
+  object-fit: cover;
 }

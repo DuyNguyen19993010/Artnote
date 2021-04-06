@@ -9,6 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include("drawing_app.urls")),
     path('auth/',CustomObtainAuthToken.as_view(),
-    # path('joinedRoom/', views.joinedRoom),
     )
 ] + static(settings.MEDIA_URL,document_root =settings.MEDIA_ROOT)
