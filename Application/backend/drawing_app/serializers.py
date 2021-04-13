@@ -27,6 +27,10 @@ class MemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
         fields = '__all__'
+class LayerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Layer
+        fields = '__all__'
 class joinedRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member
@@ -34,4 +38,12 @@ class joinedRoomSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
+        fields = '__all__'
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Like
+        fields = '__all__'
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'

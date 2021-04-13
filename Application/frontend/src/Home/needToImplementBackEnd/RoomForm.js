@@ -24,7 +24,7 @@ const RoomForm = (props) => {
     formData.append('room_name',data.room_name)
     formData.append('roomBackground',pic)
     formData.append('host',user.ID)
-    axios.post("http://localhost:8000/api/room/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+    axios.post("http://localhost:8000/api/room/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
       alert("Room created ")
       history.push('/RoomList/Joined')
     }).catch(error=>{

@@ -1,7 +1,5 @@
 import React from "react";
-import { useState, useContext } from "react";
-import { NavLink, Link, Route, BrowserRouter, Switch } from "react-router-dom";
-import { useHistory, useLocation } from "react-router";
+import {useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 import { useForm } from "react-hook-form";
 import "../../Styling/form.css";
@@ -9,14 +7,7 @@ import axios from "axios";
 const Register = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
-  const { Valid } = user;
-  const { username } = user;
-  //useHistory
-  const history = useHistory();
-  //use location
-  const { pathname } = useLocation();
-  const { register, handleSubmit, errors } = useForm();
-  var interestToSend = [];
+  const { register, handleSubmit } = useForm();
   const onSubmit = (data) => {
     let formData = new FormData()
     //Check if 2 passwords are the same

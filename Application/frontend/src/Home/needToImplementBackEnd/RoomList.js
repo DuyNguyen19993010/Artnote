@@ -8,6 +8,8 @@ import { useHistory, useLocation } from "react-router";
 import RoomForm from "./RoomForm"
 //-------------------------Routing-----------------------------
 import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
+//Import component
+import HomeButton from "./HomeButton"
 //-----------------------css import ------------------------------------
 import 'bootstrap/dist/css/bootstrap.min.css'
 import "../../Styling/RoomList.css";
@@ -37,7 +39,7 @@ const RoomList = (props) => {
     if(filter == "Joined"){
       let formdata = new FormData()
       formdata.append('user',user.ID)
-      axios.post("http://localhost:8000/api/joinedRoom/",formdata,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+      axios.post("http://localhost:8000/api/joinedRoom/",formdata,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
         console.log(res.data)
         SetRoomList(res.data)
       }).catch(error=>{
@@ -45,7 +47,7 @@ const RoomList = (props) => {
       });       
     }
     else{
-      axios.get("http://localhost:8000/api/room/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
+      axios.get("http://localhost:8000/api/room/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
         SetRoomList(res.data)
       }).catch(error=>{
           history.push("/")
@@ -81,6 +83,7 @@ const RoomList = (props) => {
   }
   return (
     <div className="Rooms">
+      <HomeButton/>
         {showForm? (<div className = "RoomForm">
           <h1>Room Creation</h1>
           <img className="closeFormButton" onClick={()=>{toggleForm(false)}} src="https://img.icons8.com/fluent-systems-filled/48/000000/x.png"/>

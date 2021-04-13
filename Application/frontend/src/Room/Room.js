@@ -14,8 +14,11 @@ import "../Styling/Room.css";
 //---------------------------------Start websocket--------------------
 
 const Room = (props) => {  
+  //History
+  const  history  = useHistory();
   //-----------------------------Room Name--------------------------------
   const {roomID} = useParams();
+  const [unMount,setMount] =useState(false) 
   const [roomName, SetRoomName]= useState("");
   useEffect(()=>{
     axios.get("http://localhost:8000/api/room_get/"+roomID+"/").then((resp) => {
@@ -26,6 +29,11 @@ const Room = (props) => {
           console.log(er)
         })
   },[])
+  const leaveSession = (ws)=>{
+    ws.current.close()
+    history.push("/RoomList/Public/")
+    // setMount(false)
+  }
 
   //-------------------------Handle drawing and messaging-----------------------------
   return (
@@ -41,8 +49,8 @@ const Room = (props) => {
         <ChatBox roomID={roomID}/>
       </div>
       {/* -----------------Drawing mode---------------- */}
-      <DrawingMode roomID={roomID}/>
-    </div>
+      <DrawingMode unMount={unMount} unMountFunction = {leaveSession} roomID={roomID}/>
+  </div>
   );
 };
 

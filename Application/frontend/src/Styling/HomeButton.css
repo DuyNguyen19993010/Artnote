@@ -1,0 +1,35 @@
+
+.home-button{
+    z-index: 100;
+    position: fixed;
+    display: grid;
+    top:90%;
+    left:90%;
+    grid-template-columns: 50% 50%;
+}
+.home-button .gallery-button{
+    background-color: white;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 0 10px rgba(94, 94, 94, 0.9);    
+    z-index: 10;
+}
+.home-button .gallery-button img{
+    margin-top:7px;
+}
+.home-button .drawing-button{
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 0 10px rgba(94, 94, 94, 0.9);    
+    z-index: 10;
+}
+.home-button .drawing-button img{
+    margin-top:7px;
+    margin-left: 5px;
+}

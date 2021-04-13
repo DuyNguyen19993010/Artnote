@@ -77,7 +77,8 @@ class LayerConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': text_data_json['type'],
-                'sender_channel_name':str(self.channel_name)
+                'sender_channel_name':str(self.channel_name),
+                'id':text_data_json['id']
             }
         )
 
@@ -88,6 +89,7 @@ class LayerConsumer(AsyncWebsocketConsumer):
         else:
             await self.send(text_data = json.dumps({
                 'type' : 'add_canvas_layer'
+                ,'id':event['id']
             }))
 
 # --------------------Consumer for handling stroke from different channel------------------------
@@ -196,18 +198,26 @@ class CanvasConsumer(AsyncWebsocketConsumer):
             }))
     # Message for asking permission to draw on a canvas layer
     async def ask_permission(self, event):
-        # Send stroke to own WebSocket, then from there, to the client different from current channel client
-        if(str(self.channel_name) == str(event['sender_channel_name'])):
-            print("init_ask_permission message ")
-        else:
-            # Ask if current channel has permission
-            await self.send(text_data = json.dumps({
-                'type' : 'ask_permission',
-                'sender_channel_name': event['sender_channel_name']
-            }))
+        # # Send stroke to own WebSocket, then from there, to the client different from current channel client
+        # if(str(self.channel_name) == str(event['sender_channel_name'])):
+        #     print("init_ask_permission message ")
+        # else:
+        #     # Ask if current channel has permission
+        #     await self.send(text_data = json.dumps({
+        #         'type' : 'ask_permission',
+        #         'sender_channel_name': event['sender_channel_name']
+        #     }))
+        # Ask if current channel has permission
+        print("dsadasd")
+        await self.send(text_data = json.dumps({
+            'type' : 'ask_permission',
+            'sender_channel_name': event['sender_channel_name'],
+            'receiver_channel_name':str(self.channel_name)
+        }))
             
     # Message for give or deny permission
     async def answer_permission(self, event):
+        print("heyyysyaydyadsyadsyayd")
         # Send answer for permission back to the channel asking
         if(str(self.channel_name) == str(event['sender_channel_name'])):
             # if there exist a channel with permission=True, don't allow permission

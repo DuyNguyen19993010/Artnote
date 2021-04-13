@@ -1,18 +1,24 @@
 import React, { useEffect,useState, useContext,useRef } from "react";
 import { UserContext } from "../../Context/UserContext";
-import { LayerContext } from "../../Context/LayerContext";
 import Canvas from './Canvas';
 import {SketchPicker} from 'react-color'
+//useHistory
+import { useHistory, useLocation } from "react-router";
 //-----------------Websocket--------------
 import {w3cwebsocket} from "websocket"
+// -----------Axios-----------------
+import axios from "axios";
+//
+import { unmountComponentAtNode, render } from "react-dom";
 // -----------------CSS-------------------
 import "../../Styling/DM.css";
-import { Layer } from "react-konva";
 const DM = (props) => {
+  const  history  = useHistory();
   //User context
   const { user, setUser } = useContext(UserContext);
   const [color,setColor]=useState('#bbb');
-  const [canvases,setCanvas]=useState({Layers:[{no:0,hidden:false,permission:true},{no:1,hidden:false,permission:true},{no:2,hidden:false,permission:true},{no:3,hidden:false,permission:true}]})
+  const [canvases,setCanvas]=useState({Layers:[]})
+  // const [canvases,setCanvas]=useState({Layers:[{no:0,hidden:false,permission:true},{no:1,hidden:false,permission:true},{no:2,hidden:false,permission:true},{no:3,hidden:false,permission:true}]})
   const [selectedLayer,SelectLayer]=useState(0)
   //Permission dialog
   const [permission_dialog_visible, setPermissionDialogVisibility] = useState(true)
@@ -45,32 +51,78 @@ const DM = (props) => {
   const layerCircleRef = useRef(null)
   // reference for the websocket
   const ws = useRef(null)
+  //unMount
+  const [unMount,setMount] = useState(false)
+  
+  //
   useEffect(()=>{
+        axios.get("http://localhost:8000/api/layers_get/"+props.roomID+"/").then((resp) => {
+          if(resp.data.Layers.length!=0){
+            setCanvas({...canvases,Layers:resp.data.Layers}) 
+          }
+          else{
+            let layer_list =[...canvases.Layers]
+            let formData = new FormData()
+            formData.append("index",0)
+            formData.append("canvas",props.roomID)
+            //push new layer into layer list
+            layer_list.push({no:0,hidden:false,permission:true})
+            setCanvas({...canvases,Layers:layer_list})
+            //Send a request for the creating the received room
+            
+            axios.post("http://localhost:8000/api/layers/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
+              
+              ws.current.send(JSON.stringify({
+                type:"add_canvas_layer",
+                id:res.data.id
+              }))
+            }).catch(er=>{
+              console.log(er)
+            })
+          }
+        }).catch(er=>{
+          console.log(er)
+        })
+
         //------------------------------Websocket-----------------------
         //---------------------------Start websocket--------------------
         ws.current = new w3cwebsocket('ws://localhost:8000/DrawingRoom/'+props.roomID+'/')
         //----------------------------Open websocket--------------------
         ws.current.onopen = ()=>{
           //Send layer initialize message
-          console.log("web socket opened")
+          
 
         }
+        ws.current.onclose = () => {
+          
+        };
+      
   },[])
+  const give_last_layer_index = ()=>{
+    let layer_list =[...canvases.Layers]
+    return layer_list.length
+  } 
   useEffect(()=>{
     ws.current.onmessage = (message) =>{
-        //Convert respsonse from server to json
-        const dataFromServer = JSON.parse(message.data);
+      const dataFromServer = JSON.parse(message.data);
         //Add layer message
         if(dataFromServer.type =="add_canvas_layer"){
-          group_add_layer()
+
+          group_add_layer(dataFromServer)
         }
         //Delete layer message
     } 
   },[canvases])
-  const group_add_layer = ()=>{
+  useEffect(()=>{
+    return ()=>{
+      
+    }
+  })
+
+  const group_add_layer = (dataFromServer)=>{
     //Add layer
     let layer_list =[...canvases.Layers]
-    layer_list.push({no:layer_list.length,hidden:false,permission:false})
+    layer_list.push({id:dataFromServer.id,no:layer_list.length,hidden:false,permission:false})
     setCanvas({...canvases,Layers:layer_list})
   }
   useEffect(()=>{
@@ -164,16 +216,34 @@ const DM = (props) => {
   }
   //--------------------Add new layer----------------------
   const addNewLayer =()=>{
-    console.log("New layer added ")
+
     let layer_list =[...canvases.Layers]
+    //prepare data to create new layer
+    let formData = new FormData()
+    formData.append("index",layer_list.length)
+    formData.append("canvas",props.roomID)
+    //push new layer into layer list
     layer_list.push({no:layer_list.length,hidden:false,permission:true})
     setCanvas({...canvases,Layers:layer_list})
-    ws.current.send(JSON.stringify({
-      type:"add_canvas_layer"
-    }))
+    //Send a request for the creating the received room
+    
+    axios.post("http://localhost:8000/api/layers/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((resp) => {
+      
+      ws.current.send(JSON.stringify({
+        type:"add_canvas_layer",
+        id:resp.data.id
+      }))
+    }).catch(er=>{
+      console.log(er)
+    })
+  }
+  const leaveSession = ()=>{
+    setMount(true)
+    props.unMountFunction(ws)
   }
   return (
   <div className="DM">
+      <button className="leave-session" onClick={()=>{leaveSession()}}>Leave session</button>
     <div className = "optionBar"> 
 
     </div>
@@ -184,7 +254,7 @@ const DM = (props) => {
     <div className="Canvases" >
         {
         canvases.Layers.map((layer,index)=>{
-          return <Canvas permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
+          return <Canvas unMount = {unMount} permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
         })
         }
     </div>

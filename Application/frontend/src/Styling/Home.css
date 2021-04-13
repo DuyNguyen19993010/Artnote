@@ -5,6 +5,9 @@
   font-size: 100%;
   vertical-align: baseline;
 }
+button:focus{
+  outline:0;
+}
 .Home {
   background-color: #E5E5E5;
   width: 100%;
@@ -70,4 +73,68 @@
   color: white;
   background-color: #0773FF;
   border-radius: 22px;
+}
+.Home .create-post-button{
+  position: fixed;
+  background-color:white ;
+  width: 177px;
+  height: 46px;
+  color: #7A7676;
+  font-size: 20px;
+  border-radius: 26px;
+  left: 1650px;
+  top:40px;
+}
+.Home .create-post-button:focus{
+  outline:0;
+}
+.Home .create-post-button:hover:not([disabled]){
+  background-color: #0773FF;
+  color: white;
+  transition: 0.2s;
+}
+
+/* ----------------------Post form-------------------- */
+.Home .post-form-wrapper{
+  border: #707070 2px solid;
+  background-color: white;
+  width: 493px;
+  height:500px;
+  position: fixed;
+  z-index: 10;
+  left: 730px;
+  top:150px;
+}
+.Home .post-form-wrapper .image-placeholder{
+  background-color:#E3E3E3 ;
+  width: 318px;
+  height: 318px;
+  margin-left: 90px;
+  margin-top: 50px;
+}
+.Home .post-form-wrapper img{
+  height: 100%; 
+  width: 100%; 
+  object-fit: cover;
+}
+.Home .post-form-wrapper input{
+  margin-left: 100px;
+}
+.Home .post-form-wrapper input[type="submit"]{
+  border: #707070 2px solid;
+  margin-left: 195px;
+  margin-top: 20px;
+  background-color:#E3E3E3;
+  border-radius: 20px;
+  width: 100px;
+}
+
+.Home .post-form-wrapper .close-button{
+  background-color: transparent;
+  position: absolute;
+  left: 440px;
+  top:10px;
+}
+.Home .post-form-wrapper .close-button:focus{
+  outline: 0;
 }

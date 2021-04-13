@@ -255,3 +255,19 @@
     background-color: #0773FF;
     color: white;
 }
+.DM .leave-session{
+    background-color: tomato;
+    color: white;
+    width: 150px;
+    font-size: 20px;
+    word-break: break-all;
+    position: fixed;
+    top:90%;
+    left:90%;
+    border-radius: 20px;
+    outline: 0;
+}
+.DM .leave-session:active{
+    background-color: rgb(110, 37, 25);
+    outline: 0;
+}

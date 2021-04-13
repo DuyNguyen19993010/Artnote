@@ -30,9 +30,6 @@ const ProfileForm = (props) => {
     formData.append('aboutMe',data.aboutMe)  
     formData.append('profile_pic',pic)
     formData.append('user',user.ID)
-    for (var pair of formData.entries()) {
-      console.log(pair[0]+ ', ' + pair[1]); 
-    }
     axios.post("http://localhost:8000/api/profile/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false','process-data':'false'}}).then((res) => {
       axios.get("http://localhost:8000/api/profile_get/"+user.ID+"/").then(resp=>{
         setUser({ ...user, Valid: true,profile:resp.data.profile ,ID:resp.data.user.id,username:resp.data.user.username});

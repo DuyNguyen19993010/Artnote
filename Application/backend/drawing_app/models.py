@@ -37,16 +37,13 @@ class Room(models.Model):
     def __str__(self):
         return self.room_name
 
-class Canvas(models.Model):
-    canvas_name = models.CharField(max_length=30)
-    room = models.OneToOneField(
-        Room, on_delete=models.CASCADE, blank=True, null=True, default=None)
-
-
 class Layer(models.Model):
-    canvas = models.ForeignKey(Canvas, on_delete=models.CASCADE)
-    image = models.ImageField(blank=True, default=None)
+    class Meta:
+        unique_together = ('canvas','index')
+    canvas = models.ForeignKey(Room, on_delete=models.CASCADE)
     index = models.IntegerField(blank = False,default = 0)
+    def __str__(self):
+        return (str(self.canvas)+"-Layer "+str(self.index))
 
 
 class Member(models.Model):
@@ -66,10 +63,14 @@ class Post(models.Model):
     interaction = models.IntegerField(blank= False, default = 0)
     current_interaction = models.IntegerField(blank =False,default=0)
     last_interaction = models.IntegerField(blank = False , default = 0)
-    last_update_date = models.DateTimeField(default = now())
-    published_date = models.DateTimeField(default = now())
+    last_update_date = models.DateTimeField(default = now)
+    published_date = models.DateTimeField(default = now)
 class Like(models.Model):
     class Meta:
         unique_together = ('user','post')
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=1024,blank=False, default="")

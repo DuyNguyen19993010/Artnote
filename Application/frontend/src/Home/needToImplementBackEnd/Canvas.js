@@ -24,8 +24,6 @@ const Canvas = (props) => {
   const [isEyeDropper,setisEyeDropper] = useState(false)
   //Permission to draw
   const [permission,setPermission] = useState(true) 
-  //Function for checking if props have been updated in the parent component
-  console.log("Layer",props.no,":",permission)
   function useDidUpdate (callback, deps) {
     const hasMount = useRef(false)
     useEffect(() => {
@@ -80,14 +78,22 @@ const Canvas = (props) => {
         ws.current = new w3cwebsocket('ws://localhost:8000/Canvas/'+props.roomID+'_'+props.no+'/')
         //----------------------------Open websocket--------------------
         ws.current.onopen = ()=>{
+          console.log("Open of layer ",props.no," websocket")
           //Send layer initialize message
           ws.current.send(JSON.stringify({
             type:"init_ask_permission"
           }))
         }
+        ws.current.onclose = () => {
+          console.log("web socket for layer"+props.no+" closed");
+        };
       }
   },[]);
-
+  // useEffect(()=>{
+  //   return ()=>{
+  //     console.log("unmounting layer "+props.no+".......")
+  //   }
+  // })
   useEffect(()=>{
     ws.current.onmessage = (message) =>{
         //Convert respsonse from server to json
@@ -116,7 +122,6 @@ const Canvas = (props) => {
           if(dataFromServer.type== "init_ask_permission"){
             //If current channel has permission then allow to receive ask message
             if(permission ==true){
-              console.log("Initial Permission for layer")
               //If current channel is the sender then reply as follows:
               if(dataFromServer.sender_channel_name == dataFromServer.receiver_channel_name){
                 ws.current.send(JSON.stringify({
@@ -134,7 +139,6 @@ const Canvas = (props) => {
               }
             }
             else{
-              console.log("You dont have permission to give")
             }
           }
           if(dataFromServer.type== "init_answer_permission"){
@@ -157,9 +161,10 @@ const Canvas = (props) => {
             }
           }
           if(dataFromServer.type== "ask_permission"){
+            
             // console.log("Current Permission for layer",props.no,": ",permission)
             if(permission == true){
-              console.log("Asking for permission")
+              
               let give_permission = window.confirm("A user is asking for permission of your current layer")
               if(give_permission){
                 setPermission(false)
@@ -172,12 +177,20 @@ const Canvas = (props) => {
                 sender_channel_name: dataFromServer.sender_channel_name,
                 permission: !give_permission
               }))
+              
             }
+            
           }
           
 
         } 
   },[permission])
+  useEffect(()=>{
+    return ()=>{
+      ws.current.close()
+      
+    }
+  },[])
   //Set brush to sender preference
   const setBrushToSenderPref = (senderData)=>{
     //Save the user preference before changing to sender data
@@ -242,6 +255,9 @@ const Canvas = (props) => {
 }
   // --------------------Check if the prop "hidden" is updated, called everytime the prop is updated----------------
   useDidUpdate(()=>{
+    // if(props.unMount){
+    //   ws.current.close()
+    // }
     //Update context2D every time the brush preference or tools are changed in the parent component
     //Change a stroke texture
     contextRef.current.lineCap = props.brush.tip
@@ -289,7 +305,6 @@ const Canvas = (props) => {
   }
   //Check what layer the user has just selected and ask permission to access that layer
   useDidUpdate(()=>{
-    console.log("Different layer")
     if(props.selected == props.no){
       canvasRef.current.style.pointerEvents = 'auto'
       if(!permission){

@@ -1,0 +1,98 @@
+.UserHome{
+    margin: 0px;
+    background-color: #E5E5E5;
+    height: fit-content;
+}
+.UserHome .user-info-wrapper{
+    text-align: center;
+    width: 100%;
+    height: 450px;
+}
+.UserHome .user-info-wrapper .profile-pic-wrapper {
+    width: 200px;
+    height: 200px;
+    margin-left: 45.5%;
+
+}
+
+.UserHome .user-info-wrapper .profile-pic-wrapper img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 100px;
+}
+.UserHome .user-info-wrapper .user-info{
+    margin-top:20px;
+    font-size: 20px;
+    text-align: center;
+}
+.UserHome .user-info-wrapper .user-info .username{
+    font-size: 30px;
+    width: 150px;
+    border-radius: 25px;
+    color: white;
+    margin-left:46.3% ;
+    background-color: #0773FF;
+    word-break: break-all;
+}
+.UserHome .user-info-wrapper .user-info {
+    color: black;
+}
+.UserHome .user-info-wrapper .user-info .aboutMe-header{
+    font-weight: 700;
+    text-decoration: underline;
+}
+.UserHome .user-info-wrapper .user-info .aboutMe{
+    font-size: 17px;
+}
+.UserHome .posts-wrapper {
+    display: grid;
+    margin: auto;
+    padding-left:150px;
+    margin-bottom: 50px;
+    grid-template-columns: repeat(3, 1fr);
+}
+.UserHome .posts-wrapper .post-wrapper{
+    width: 442px;
+    height: 350px;
+    margin-top: 40px;
+}
+.UserHome .posts-wrapper .post-wrapper img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+/* 
+.UserHome .home-button{
+    position: fixed;
+    display: grid;
+    top:90%;
+    left:90%;
+    grid-template-columns: 50% 50%;
+}
+.UserHome .home-button .gallery-button{
+    background-color: white;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 0 10px rgba(94, 94, 94, 0.9);    
+    z-index: 10;
+}
+.UserHome .home-button .gallery-button img{
+    margin-top:7px;
+}
+.UserHome .home-button .drawing-button{
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border-radius: 5px;
+    margin-left: 10px;
+    box-shadow: 0 0 10px rgba(94, 94, 94, 0.9);    
+    z-index: 10;
+}
+.UserHome .home-button .drawing-button img{
+    margin-top:7px;
+    margin-left: 5px;
+} */

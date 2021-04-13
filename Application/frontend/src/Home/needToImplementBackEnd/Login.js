@@ -22,11 +22,16 @@ const Login = (props) => {
     axios.post("http://localhost:8000/auth/",formData).then((res) => {
       if(res.data){
         console.log(res.data)
-        let my_token = res.data.token
-        axios.get("http://localhost:8000/api/profile_get/"+res.data.id+"/").then(res=>{
-
-        setUser({ ...user, Valid: true, token: my_token,profile:res.data.profile ,ID:res.data.user.id,username:res.data.user.username});
-        history.push('/Home/')
+        var my_token = res.data.token
+        axios.get("http://localhost:8000/api/profile_get/"+res.data.id+"/",{headers:{'Authorization':"Token "+my_token,'Content-Type':'false'}}).then(resp=>{
+        if(resp.data.Message!="You are not authorized"){
+          console.log(my_token)
+          setUser({ ...user, Valid: true, token: my_token,profile:resp.data.profile ,ID:resp.data.user.id,username:resp.data.user.username});
+          history.push('/Home/')
+        }
+        else{
+          alert("You are not authorized")
+        }
         })
       }
     }).catch(error =>{ 

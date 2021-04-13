@@ -37,12 +37,19 @@ from datetime import datetime
 # Custom authorization decorator
 def Custom_token_authorization(other_function):
     def new_function(request, *args, **kwargs):
-        header,value=request.META['HTTP_AUTHORIZATION'].split(" ")
-        user = Token.objects.filter(key = value)
-        if(len(user)):
-            return other_function(request, *args, **kwargs)
-        else:
-            return JsonResponse({"Message":"You are not authorized"})    
+        try:
+            header,value=request.META['HTTP_AUTHORIZATION'].split(" ")
+            user = Token.objects.filter(key = value)
+            print(value)
+            print(Token.objects.all())
+            if(len(user)):
+                return other_function(request, *args, **kwargs)
+            else:
+                print("No user exist")
+                return JsonResponse({"Message":"You are not authorized"})   
+        except:
+            print("No token")
+            return JsonResponse({"Message":"You are not authorized"}) 
     return new_function
 # Decorator for updating all objects in the Post model
 # -------------------Room viewsets---------------------------
@@ -89,6 +96,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 # Token authentication
 class CustomObtainAuthToken(ObtainAuthToken):
+    @csrf_exempt
     def post(self, request, *args, **kwargs):
         response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
@@ -110,12 +118,15 @@ class ProfileViewSet(viewsets.ModelViewSet):
         new_profile = Profile.objects.create(fname = fname, lname =lname , occupation = occupation,location= location,aboutMe =aboutMe,user = user , profile_pic = profile_pic)
         new_profile = ProfileSerializer(new_profile)
         return JsonResponse(new_profile.data)
+@Custom_token_authorization
 def profile_get(request,user_id):
     user_queryset = User.objects.get(pk = user_id)
     profile_queryset = Profile.objects.get(user= user_queryset)
+    posts_queryset = Post.objects.filter(user = user_queryset)
+    posts = PostSerializer(posts_queryset,many=True)
     user = UserSerializer(user_queryset)
     prof= ProfileSerializer(profile_queryset)
-    return JsonResponse({"profile":prof.data,"user":user.data})
+    return JsonResponse({"profile":prof.data,"user":user.data,"posts":posts.data})
 
 
 # -------------------------Interest viewsets-------------------
@@ -148,16 +159,21 @@ class MemberViewSet(viewsets.ModelViewSet):
         if(NumRoomMember <= 0):
             roomQuery.delete()
         return JsonResponse({"Delete":"success"})
-# ---------------------Canvas views--------------------------
-# GET
-def canvas_get(request):
-    print("This is canvas GET")
-# POST
-def canvas_post(request):
-    print("This is canvas post")
-# PUT
-def canvas_put(request):
-    print("This is canvas put")
+# ---------------------Layer views--------------------------
+class LayerViewSet(viewsets.ModelViewSet):
+    queryset = Layer.objects.all()
+    serializer_class = LayerSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,]
+
+def layer_get(request, room_id):
+    layer_queryset = Layer.objects.filter(canvas = room_id)
+    layers= LayerSerializer(layer_queryset,many= True).data
+    for layer in layers:
+        layer['no'] = layer['index']
+        layer['hidden'] = False
+        layer['permission'] = True
+    return JsonResponse({"Layers":layers})
 
 
 # ---------------------Post viewsets-------------------------
@@ -166,6 +182,22 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated,]
+@Custom_token_authorization
+def post_get(request,post_id):
+    queryset = Post.objects.get(pk = post_id)
+    post = PostSerializer(queryset).data
+    user_id = post['user']
+    user_query = User.objects.get(pk = user_id)
+    profile_query = Profile.objects.get(user=user_query)
+    like_query = Like.objects.filter( post = queryset)
+    like_count= like_query.count()
+    profile= ProfileSerializer(profile_query).data
+    user = UserSerializer(user_query).data 
+    response = JsonResponse({"user":user,"profile":profile,"post":post,"like":like_count})
+    response['Access-Control-Allow-Origin'] = "*"
+    response['Access-Control-Allow-Methods'] = "GET, POST, PUT, DELETE, PATCH"
+    response['Access-Control-Allow-Headers'] ='Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    return response
 
 
 # View for getting 4 most popular posts
@@ -185,17 +217,25 @@ def post_popular_batch_get(request,index):
             last_update_time = datetime.strptime(data_json['last_update_date'], fmt)
         current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
         minute_difference= (current_date-last_update_time).total_seconds()/60
-        if(minute_difference>= 1):
+        if(minute_difference>= 15):
             new_data = Post.objects.filter(pk=data_json['id'])
             new_data.update(interaction =F("current_interaction")-F("last_interaction"))
             new_data.update(last_interaction =F("current_interaction"))
             new_data.update(current_interaction =0)
             new_data.update(last_update_date =now())
     # Query 4 most popular post
-    queryset= Post.objects.all().order_by('-interaction')[int(index):int(index)+3]
+    queryset= Post.objects.all().order_by('-interaction')[int(index):int(index)+5]
     # if Query has no object then reponse with 0 and if !=0 handle accordingly
     if(queryset.count()==0):
-        return JsonResponse({"Message":"Success","posts":0})
+        queryset= Post.objects.all().order_by('-interaction')[0:5]
+        posts = PostSerializer(queryset,many=True)
+        preprocess_data = posts.data
+        for post in preprocess_data:
+            user_queryset = User.objects.get(pk = post['user'])
+            profile_queryset = Profile.objects.get(user = user_queryset)
+            post['user'] = ProfileSerializer(profile_queryset).data
+            post['user']['user'] = {"id":post['user']['user'],"username":UserSerializer(user_queryset).data['username']}
+        return JsonResponse({"Message":"Success","posts":posts.data,"reset":True})
     else:
         posts = PostSerializer(queryset,many=True)
         preprocess_data = posts.data
@@ -205,9 +245,11 @@ def post_popular_batch_get(request,index):
             post['user'] = ProfileSerializer(profile_queryset).data
             post['user']['user'] = {"id":post['user']['user'],"username":UserSerializer(user_queryset).data['username']}
         # if query has different of object from 4 then reset index
-        if(queryset.count() != 4):
+        if(queryset.count() != 5):
+            print(queryset.count())
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":True})
         else:
+            print(queryset.count())
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":False})
 # View for getting 4 most recent posts 
 @csrf_exempt
@@ -226,17 +268,25 @@ def post_latest_batch_get(request,index):
             last_update_time = datetime.strptime(data_json['last_update_date'], fmt)
         current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
         minute_difference= (current_date-last_update_time).total_seconds()/60
-        if(minute_difference>= 1):
+        if(minute_difference>= 15):
             new_data = Post.objects.filter(pk=data_json['id'])
             new_data.update(interaction =F("current_interaction")-F("last_interaction"))
             new_data.update(last_interaction =F("current_interaction"))
             new_data.update(current_interaction =0)
             new_data.update(last_update_date =now())
     # Query 4 latest post
-    queryset= Post.objects.all().order_by('-published_date')[int(index):int(index)+3]
+    queryset= Post.objects.all().order_by('-published_date')[int(index):int(index)+5]
     # if Query has no object then reponse with 0 and if !=0 handle accordingly
     if(queryset.count()==0):
-        return JsonResponse({"Message":"Success","posts":0})
+        queryset= Post.objects.all().order_by('-published_date')[0:5]
+        posts = PostSerializer(queryset,many=True)
+        preprocess_data = posts.data
+        for post in preprocess_data:
+            user_queryset = User.objects.get(pk = post['user'])
+            profile_queryset = Profile.objects.get(user = user_queryset)
+            post['user'] = ProfileSerializer(profile_queryset).data
+            post['user']['user'] = {"id":post['user']['user'],"username":UserSerializer(user_queryset).data['username']}
+        return JsonResponse({"Message":"Success","posts":posts.data,"reset":True})
     else:
 
         posts = PostSerializer(queryset,many=True)
@@ -247,7 +297,7 @@ def post_latest_batch_get(request,index):
             post['user'] = ProfileSerializer(profile_queryset).data
             post['user']['user'] = {"id":post['user']['user'],"username":UserSerializer(user_queryset).data['username']}
         # if query has different of object from 4 then reset index
-        if(queryset.count() != 4):
+        if(queryset.count() != 5):
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":True})
         else:
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":False})
@@ -266,6 +316,7 @@ def click_update_Interaction(request):
         last_update_time = datetime.strptime(post['last_update_date'], fmt)
     current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
     minute_difference= (current_date-last_update_time).total_seconds()/60
+    print(minute_difference)
     if(minute_difference>= 15):
         post_object = Post.objects.filter(pk = request.POST['post_id'])
         post_object.update(interaction =F("current_interaction")-F("last_interaction"))
@@ -288,17 +339,65 @@ def like_comment_update_interaction(request):
         last_update_time = datetime.strptime(post['last_update_date'], fmt)
     current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
     minute_difference= (current_date-last_update_time).total_seconds()/60
+    print(minute_difference)
     if(minute_difference>= 15):
         post_object = Post.objects.filter(pk = request.POST['post_id'])
         post_object.update(interaction =F("current_interaction")-F("last_interaction"))
         post_object.update(last_interaction =F("current_interaction"))
         post_object.update(current_interaction =0)
     return JsonResponse({"Message":"Success"})
-    
-
-
+# ----------------------Like viewset---------------------------------
+class LikeViewSet(viewsets.ModelViewSet):
+    queryset = Like.objects.all()
+    serializer_class = LikeSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,]
+@csrf_exempt
+@Custom_token_authorization
+def dislike(request):
+    queryset = Like.objects.get(post = request.POST['post'],user = request.POST['user'] )
+    queryset.delete()
+    return JsonResponse({"Like":LikeSerializer(queryset).data})
+@csrf_exempt
+@Custom_token_authorization
+def like_check(request):
+    queryset = Like.objects.filter(post = request.POST['post'],user = request.POST['user'] )
+    if(queryset.count()==0):
+        return JsonResponse({"check":False})
+    else:
+        return JsonResponse({"check":True})
+# ----------------------Comment viewset---------------------------------
+class CommentViewSet(viewsets.ModelViewSet):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    authentication_classes = [TokenAuthentication, ]
+    permission_classes = [IsAuthenticated,]
+@csrf_exempt
+@Custom_token_authorization
+def comments(request,post_id):
+    queryset = Comment.objects.filter(post = post_id )
+    comments = CommentSerializer(queryset,many=True).data
+    for comment in comments:
+        user_query= User.objects.get(pk = comment['user'])
+        profile_query = Profile.objects.get(user = user_query)
+        user = UserSerializer(user_query).data
+        profile = ProfileSerializer(profile_query).data
+        comment['user'] = user
+        comment['profile'] = profile
+    return JsonResponse({"comments":comments})
+@csrf_exempt
+@Custom_token_authorization
+def comment(request):
+    queryset = Comment.objects.get(pk = request.POST['comment_id'])
+    comment = CommentSerializer(queryset).data
+    user_query= User.objects.get(pk = comment['user'])
+    profile_query = Profile.objects.get(user = user_query)
+    user = UserSerializer(user_query).data
+    profile = ProfileSerializer(profile_query).data
+    comment['user'] = user
+    comment['profile'] = profile
         
-
+    return JsonResponse({"comment":comment})
 
     
 

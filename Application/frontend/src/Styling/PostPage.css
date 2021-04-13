@@ -55,7 +55,7 @@
   .PostPage .post-comment-wrapper{
       background-color: white;
       width: 626px;
-      height: 780px;
+      height: 700px;
       position: absolute;
       left:1048px;
       top:114px;
@@ -76,7 +76,7 @@
     } 
     .PostPage .post-comment-wrapper .post-comment-comments{
         display: block;
-        height: 707px;
+        height: 600px;
         overflow-y: scroll;   
     } 
     .PostPage .post-comment-wrapper .post-comment-comments .comment-wrapper{
@@ -129,4 +129,42 @@
         word-wrap: break-word;
         width: 578px;
         overflow: scroll;    
+    }
+    .PostPage .comment-form{
+        margin-top: 40px;
+        height: 50px;
+
+    }
+    .PostPage .comment-form .comment-input{
+        float: left;
+        background-color: white;
+        border-radius: 22px;
+        border: #707070 solid 2px;
+        width: 550px;
+        height: 40px;
+        font-size: 20px;
+        padding-left: 10px;
+    }
+    .PostPage .comment-form .comment-input:focus{
+        outline: 0;
+    }
+    .PostPage .comment-form .submitButton{
+        margin-left: 5px;
+        margin-top: 4px;
+        border: none;
+        background-color: #0773FF;
+        color: white;
+        width: 70px;
+        height: 32px;
+        border-radius: 22px;
+        
+    }
+    .PostPage .comment-form .submitButton:focus{
+        border: none;
+        background-color: #124383;
+        color: white;
+        width: 70px;
+        height: 32px;
+        border-radius: 22px;
+        outline: 0;
     }
