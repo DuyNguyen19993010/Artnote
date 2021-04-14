@@ -1,22 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useState, useContext } from "react";
-import { NavLink, Link, Route, BrowserRouter, Switch } from "react-router-dom";
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 import { UserContext } from "../../Context/UserContext";
 import { useForm } from "react-hook-form";
 import "../../Styling/form.css";
 import axios from "axios";
 const RoomForm = (props) => {
   //User context
-  const { user, setUser } = useContext(UserContext);
-  const { Valid } = user;
+  const { user } = useContext(UserContext);
   //Profile pic
   const [pic,setPic] = useState()   
   //useHistory
   const  history  = useHistory();
   //use location
-  const { pathname } = useLocation();
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit} = useForm();
 
   const onSubmit = (data) => {
     console.log(data)

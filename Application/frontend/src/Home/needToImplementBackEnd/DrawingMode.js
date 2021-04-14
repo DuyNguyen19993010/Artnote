@@ -53,7 +53,6 @@ const DM = (props) => {
   const ws = useRef(null)
   //unMount
   const [unMount,setMount] = useState(false)
-  
   //
   useEffect(()=>{
         axios.get("http://localhost:8000/api/layers_get/"+props.roomID+"/").then((resp) => {
@@ -65,13 +64,13 @@ const DM = (props) => {
             let formData = new FormData()
             formData.append("index",0)
             formData.append("canvas",props.roomID)
-            //push new layer into layer list
-            layer_list.push({no:0,hidden:false,permission:true})
-            setCanvas({...canvases,Layers:layer_list})
+          
             //Send a request for the creating the received room
             
             axios.post("http://localhost:8000/api/layers/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
-              
+              //push new layer into layer list
+              layer_list.push({id:res.data.id,no:0,hidden:false,permission:true})
+              setCanvas({...canvases,Layers:layer_list})
               ws.current.send(JSON.stringify({
                 type:"add_canvas_layer",
                 id:res.data.id
@@ -176,7 +175,7 @@ const DM = (props) => {
   //-------------------------------Layer System-----------------------
   const renderLayers = ()=>{
     return canvases.Layers.map((layer,index)=>{
-      return <Canvas permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
+      return <Canvas layer_id={layer.id} permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
     })
   }
   const toggleTool = (e)=>{
@@ -222,13 +221,13 @@ const DM = (props) => {
     let formData = new FormData()
     formData.append("index",layer_list.length)
     formData.append("canvas",props.roomID)
-    //push new layer into layer list
-    layer_list.push({no:layer_list.length,hidden:false,permission:true})
-    setCanvas({...canvases,Layers:layer_list})
     //Send a request for the creating the received room
     
     axios.post("http://localhost:8000/api/layers/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((resp) => {
-      
+      console.log(resp.data)
+      //push new layer into layer list
+      layer_list.push({id:resp.data.id,no:layer_list.length,hidden:false,permission:true})
+      setCanvas({...canvases,Layers:layer_list})
       ws.current.send(JSON.stringify({
         type:"add_canvas_layer",
         id:resp.data.id
@@ -254,7 +253,7 @@ const DM = (props) => {
     <div className="Canvases" >
         {
         canvases.Layers.map((layer,index)=>{
-          return <Canvas unMount = {unMount} permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
+          return <Canvas key ={index} image = {layer.image} layer_id ={layer.id} unMount = {unMount} permission={layer.permission} setColor ={setColor} brushtool={brushTools} roomID={props.roomID} selected={selectedLayer} hidden = {layer.hidden} no={layer.no} draggable='true' width={1200} height={700} brush={brush} brushOpacity={penOpacity} brushSize={penSize} brushColor={color}/>
         })
         }
     </div>

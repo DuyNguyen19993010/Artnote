@@ -30,7 +30,15 @@ class MemberSerializer(serializers.ModelSerializer):
 class LayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Layer
+        fields = ['canvas','index','id']
+class LayerAllSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Layer
         fields = '__all__'
+class LayerImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Layer
+        fields = ['image']
 class joinedRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = Member

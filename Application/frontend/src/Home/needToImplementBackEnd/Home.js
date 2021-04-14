@@ -14,10 +14,8 @@ import HomeButton from "./HomeButton"
 //CSS
 import "../../Styling/Home.css";
 const Home = (props) => {
-  const history = useHistory();
   //User context: user:{ID,email,Valid}
   const { user, setUser } = useContext(UserContext);
-  const { Valid } = user;
   //Filter
   const [selectedFilter,selectFilter] = useState("popular")
   //Post list
@@ -40,7 +38,7 @@ const Home = (props) => {
     const{key,keyCode}=e;
     if(keyCode ==32 && canRefresh){
       setRefresh(false)
-      if(selectedFilter == "latest"){
+      if(selectedFilter === "latest"){
         axios.get("http://localhost:8000/api/post_latest_get/"+latest_postIndex+"/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
           if(res.data.reset == true){
             setLatestIndex(0)

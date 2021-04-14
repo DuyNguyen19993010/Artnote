@@ -18,8 +18,7 @@ const PostPage = (props) => {
   const { id } = useParams();
   const [post,setPost]= useState(null)
   //User context: user:{ID,email,Valid}
-  const { user, setUser } = useContext(UserContext);
-  const { Valid } = user;
+  const { user } = useContext(UserContext);
   //Like 
   const [likeNo,setLike]= useState(0)
   const [liked,setLiked] = useState(false)

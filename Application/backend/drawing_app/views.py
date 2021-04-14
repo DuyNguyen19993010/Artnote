@@ -34,22 +34,21 @@ from django.db.models import F
 # -------------------------------Date----------------------------
 from django.utils.timezone import now
 from datetime import datetime
+# Converter for datURl
+from binascii import a2b_base64
 # Custom authorization decorator
 def Custom_token_authorization(other_function):
     def new_function(request, *args, **kwargs):
         try:
             header,value=request.META['HTTP_AUTHORIZATION'].split(" ")
             user = Token.objects.filter(key = value)
-            print(value)
-            print(Token.objects.all())
             if(len(user)):
                 return other_function(request, *args, **kwargs)
             else:
                 print("No user exist")
-                return JsonResponse({"Message":"You are not authorized"})   
-        except:
-            print("No token")
-            return JsonResponse({"Message":"You are not authorized"}) 
+                return JsonResponse({"Message":"This user does not exist"})   
+        except Exception as e:
+            return JsonResponse({"Message":str(e)}) 
     return new_function
 # Decorator for updating all objects in the Post model
 # -------------------Room viewsets---------------------------
@@ -84,7 +83,6 @@ def joinedRoom(request):
         # ---------------------Query the rooms in the list----------------------
         roomQuery= Room.objects.filter(pk__in=room_ids)
         rooms = RoomSerializer(roomQuery,many=True)
-        print(rooms.data)
         # ---------------------Adding backend's server domain to image url---------------
         for i in range(0,len(rooms.data)):
             rooms.data[i]['roomBackground'] = 'http://'+ request.META['HTTP_HOST'] +rooms.data[i]['roomBackground'] 
@@ -165,10 +163,28 @@ class LayerViewSet(viewsets.ModelViewSet):
     serializer_class = LayerSerializer
     authentication_classes = [TokenAuthentication, ]
     permission_classes = [IsAuthenticated,]
+@csrf_exempt    
+@Custom_token_authorization
+def save_layer_image(request):
+    queryset = Layer.objects.filter(pk = request.POST['layer_id'])
+    layer_image = LayerAllSerializer(queryset[0]).data
+    print(layer_image)
+    save_path = "./backend/canvas_"+str(layer_image['canvas'])+"_layer_"+str(layer_image['id'])+".png"
+    print(save_path)
+    # print(request.data)
+    img_file = open(save_path, "wb")
+    img_file.write(a2b_base64(request.POST['image']))
+    img_file.close()
+    queryset.update(image = "./canvas_"+str(layer_image['canvas'])+"_layer_"+str(layer_image['id'])+".png")
+    queryset = Layer.objects.filter(pk = request.POST['layer_id'])
+    layer_image = LayerAllSerializer(queryset[0]).data
+    return JsonResponse(layer_image)
+    
+
 
 def layer_get(request, room_id):
     layer_queryset = Layer.objects.filter(canvas = room_id)
-    layers= LayerSerializer(layer_queryset,many= True).data
+    layers= LayerAllSerializer(layer_queryset,many= True).data
     for layer in layers:
         layer['no'] = layer['index']
         layer['hidden'] = False
@@ -246,10 +262,8 @@ def post_popular_batch_get(request,index):
             post['user']['user'] = {"id":post['user']['user'],"username":UserSerializer(user_queryset).data['username']}
         # if query has different of object from 4 then reset index
         if(queryset.count() != 5):
-            print(queryset.count())
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":True})
         else:
-            print(queryset.count())
             return JsonResponse({"Message":"Success","posts":posts.data,"reset":False})
 # View for getting 4 most recent posts 
 @csrf_exempt
@@ -306,7 +320,6 @@ def post_latest_batch_get(request,index):
 def click_update_Interaction(request):
     Post.objects.filter(pk = request.POST['post_id']).update(current_interaction =F("current_interaction")+1)
     post = PostSerializer(Post.objects.get(pk = request.POST['post_id'])).data
-    print(PostSerializer(Post.objects.all()[0]).data)
     last_update_time = None
     try:
         fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -316,7 +329,6 @@ def click_update_Interaction(request):
         last_update_time = datetime.strptime(post['last_update_date'], fmt)
     current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
     minute_difference= (current_date-last_update_time).total_seconds()/60
-    print(minute_difference)
     if(minute_difference>= 15):
         post_object = Post.objects.filter(pk = request.POST['post_id'])
         post_object.update(interaction =F("current_interaction")-F("last_interaction"))
@@ -339,7 +351,6 @@ def like_comment_update_interaction(request):
         last_update_time = datetime.strptime(post['last_update_date'], fmt)
     current_date = datetime.strptime(str(now().strftime(fmt)), fmt)
     minute_difference= (current_date-last_update_time).total_seconds()/60
-    print(minute_difference)
     if(minute_difference>= 15):
         post_object = Post.objects.filter(pk = request.POST['post_id'])
         post_object.update(interaction =F("current_interaction")-F("last_interaction"))

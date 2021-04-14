@@ -16,3 +16,7 @@ class RoomForm(forms.ModelForm):
     class Meta:
         model = Room
         fields = ['room_name', 'roomBackground', 'host']
+class LayerForm(forms.ModelForm):
+    class Meta:
+        model = Layer
+        fields = ['image']

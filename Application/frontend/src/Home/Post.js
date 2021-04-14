@@ -1,8 +1,7 @@
 import React from "react";
 import "../Styling/Post.css";
-import { NavLink,Route, Switch } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 const Post = (props) => {
-  console.log(props)
   return (
     <div className={"post-"+props.type+"-wrapper"}>
       <div className="post-author-wrapper">

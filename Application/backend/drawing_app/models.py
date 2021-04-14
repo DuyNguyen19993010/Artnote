@@ -42,6 +42,7 @@ class Layer(models.Model):
         unique_together = ('canvas','index')
     canvas = models.ForeignKey(Room, on_delete=models.CASCADE)
     index = models.IntegerField(blank = False,default = 0)
+    image = models.ImageField(blank=True, null = True,default= None)
     def __str__(self):
         return (str(self.canvas)+"-Layer "+str(self.index))
 

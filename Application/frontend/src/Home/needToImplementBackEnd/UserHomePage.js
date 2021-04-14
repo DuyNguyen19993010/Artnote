@@ -8,11 +8,10 @@ import axios from "axios";
 import { useParams} from "react-router";
 //CSS
 import "../../Styling/UserHomePage.css";
-import { NavLink } from "react-router-dom";
 //Import component
 import HomeButton from "./HomeButton"
 export const UserHome = (props) => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   //useParam to get query of what user to display
   const { user_id } = useParams();
   //get user data from database and assign it to userInfo local variable
@@ -21,7 +20,7 @@ export const UserHome = (props) => {
   useEffect(() => {
     console.log(user)
     axios.get("http://localhost:8000/api/profile_get/"+user_id,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
-      if(res.data.Message!="You are not authorized"){
+      if(res.data.Message!=="You are not authorized"){
         console.log(res.data)
         setInfo(res.data)
       }

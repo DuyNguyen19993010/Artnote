@@ -3,9 +3,13 @@ import { UserContext } from "../../Context/UserContext";
 import { LayerContext } from "../../Context/LayerContext";
 import { useForm } from "react-hook-form";
 import '../../Styling/Canvas.css'
+// -----------Axios-----------------
+import axios from "axios";
+//------------Websocket-----------
 import {w3cwebsocket} from "websocket"
 const Canvas = (props) => {
   //User context
+  const { user, setUser } = useContext(UserContext);
   const { context,setContext } = useContext(LayerContext);
   // reference for the websocket
   const ws = useRef(null)
@@ -68,11 +72,26 @@ const Canvas = (props) => {
         const my_context = canvas.getContext("2d");
         my_context.scale(2,2)
         my_context.lineCap = props.brush.tip
-        my_context.strokeStyle = props.brushColor
+        console.log("This is the brush color",hexToRgbA(props.brushColor))
+        my_context.strokeStyle = hexToRgbA(props.brushColor)
         my_context.lineWidth=props.brushSize
-        my_context.globalAlpha  = props.brushOpacity
+        //Draw layer image
+        if(canvasRef.current){
+          console.log("First useEffect")
+          if(props.image){
+            let img = new Image;
+            img.src= "http://localhost:8000"+props.image
+            img.crossOrigin = "anonymous";
+            img.onload = function(){
+              // contextRef.current.globalAlpha  = 1
+              contextRef.current.drawImage(img,0,0,props.width,props.height)
+              // contextRef.current.globalAlpha  = props.brushOpacity
+            }
+          }
+        }
         //Storing the 2d context
         contextRef.current = my_context
+        
         //------------------------------Websocket-----------------------
         //---------------------------Start websocket--------------------
         ws.current = new w3cwebsocket('ws://localhost:8000/Canvas/'+props.roomID+'_'+props.no+'/')
@@ -89,11 +108,6 @@ const Canvas = (props) => {
         };
       }
   },[]);
-  // useEffect(()=>{
-  //   return ()=>{
-  //     console.log("unmounting layer "+props.no+".......")
-  //   }
-  // })
   useEffect(()=>{
     ws.current.onmessage = (message) =>{
         //Convert respsonse from server to json
@@ -110,6 +124,7 @@ const Canvas = (props) => {
           if(dataFromServer.type== "eraser"){
             //Set the current brush preference to the sender preference
               contextRef.current.globalCompositeOperation = 'destination-out'
+              setBrushToSenderPref(dataFromServer)
               //draw the stroke
               draw(dataFromServer)
              //Set back the current brush preference to the client preference based on their current tool
@@ -218,7 +233,18 @@ const Canvas = (props) => {
     contextRef.current.lineWidth = client_width
     contextRef.current.globalAlpha = client_opacity
   }
-
+  function hexToRgbA(hex){
+    var c;
+    if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+        c= hex.substring(1).split('');
+        if(c.length== 3){
+            c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+        }
+        c= '0x'+c.join('');
+        return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+',0.4)';
+    }
+    throw new Error('Bad Hex');
+  }
   //Function for drawing the data received from the server
   const draw =(data)=>{
           contextRef.current.beginPath()
@@ -255,14 +281,10 @@ const Canvas = (props) => {
 }
   // --------------------Check if the prop "hidden" is updated, called everytime the prop is updated----------------
   useDidUpdate(()=>{
-    // if(props.unMount){
-    //   ws.current.close()
-    // }
     //Update context2D every time the brush preference or tools are changed in the parent component
     //Change a stroke texture
     contextRef.current.lineCap = props.brush.tip
     //Change a behaviour for different tool
-    //*Tool != eraser
     if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
       contextRef.current.globalCompositeOperation = 'source-over'
       //*Tool = eyedropper
@@ -278,11 +300,11 @@ const Canvas = (props) => {
       contextRef.current.globalCompositeOperation = 'destination-out'
     }
     //Change brush color
-    contextRef.current.strokeStyle = props.brushColor 
+    contextRef.current.strokeStyle = hexToRgbA(props.brushColor) 
     //Change width of the line
     contextRef.current.lineWidth=props.brushSize
     //Change width of the line
-    contextRef.current.globalAlpha=props.brushOpacity
+    // contextRef.current.globalAlpha=props.brushOpacity
     //Change pen pressure(To be added)
     //TODO:
 
@@ -314,7 +336,7 @@ const Canvas = (props) => {
     else{
       canvasRef.current.style.pointerEvents = 'none'
     }
-  }, [props.selected,permission])
+  }, [props.selected])
   //--------------------Eyedropper function----------------------------
   const eyeDropColor =(corrdinate)=>{
     let pxData = contextRef.current.getImageData(corrdinate.offsetX*2,corrdinate.offsetY*2,1,1);
@@ -327,7 +349,8 @@ const Canvas = (props) => {
       const {offsetX,offsetY} = nativeEvent
       const corrdinate = {offsetX:offsetX, offsetY:offsetY}
       //Only draw when eye dropper mode is off 
-      if(permission){
+      if(permission && !isDrawing){
+        console.log("At the start-Mouse down")
         if(!isEyeDropper){
           contextRef.current.beginPath()
           contextRef.current.moveTo(offsetX,offsetY)
@@ -355,6 +378,14 @@ const Canvas = (props) => {
         contextRef.current.closePath()
       }
     }
+    let currentImage = canvasRef.current.toDataURL("image/png").replace("data:image/png;base64,", "")
+    let formData = new FormData()
+    formData.append("layer_id",props.layer_id)
+    formData.append("image",currentImage)
+    axios.post("http://localhost:8000/api/layers_save_image/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'multipart/form-data'}}).then((resp) => {
+    }).catch(er=>{
+      console.log(er)
+    })
     //Set drawing mode to false when lift mouse
     setIsDrawing(false)
     }

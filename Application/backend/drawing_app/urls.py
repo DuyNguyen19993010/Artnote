@@ -19,6 +19,7 @@ router.register('layers' , views.LayerViewSet)
 urlpatterns = [
     path('',include(router.urls)),
     path('layers_get/<int:room_id>/',views.layer_get),
+    path('layers_save_image/',views.save_layer_image),
     path('joinedRoom/',views.joinedRoom),
     path('profile_get/<int:user_id>/',views.profile_get),
     path('room_get/<int:room_id>/',views.room_get),

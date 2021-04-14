@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import {useHistory } from "react-router";
-import {useState,useContext} from "react";
-import {w3cwebsocket} from "websocket"
+import {useState} from "react";
 //--------------------------Pages------------------------
 import DrawingMode from "../Home/needToImplementBackEnd/DrawingMode";
 import ChatBox from "./Chatbox";
 //-------------------------Routing-----------------------------
-import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
+import {useParams } from "react-router-dom";
 // -----------Axios-----------------
 import axios from "axios";
 // -------CSS----------
@@ -24,7 +23,7 @@ const Room = (props) => {
     axios.get("http://localhost:8000/api/room_get/"+roomID+"/").then((resp) => {
           console.log(resp.data);
           SetRoomName(resp.data.room_name)
-          props.setRegStage(true)
+          // props.setRegStage(true)
         }).catch(er=>{
           console.log(er)
         })

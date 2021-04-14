@@ -1,18 +1,12 @@
 import React, { useEffect, useRef } from "react";
 import "../Styling/ChatBox.css";
-import {useHistory } from "react-router";
 // ----------------Context------------------
 import { UserContext } from "../Context/UserContext";
 import {useState,useContext} from "react";
 import {w3cwebsocket} from "websocket"
-//--------------------------Pages------------------------
-import DrawingMode from "../Home/needToImplementBackEnd/DrawingMode";
-//-------------------------Routing-----------------------------
-import { Link, NavLink,Route, Switch,useParams } from "react-router-dom";
 const ChatBox = (props) => {
   //User context
   const { user, setUser } = useContext(UserContext);
-  const {profile} = user;
   const {username} = user;
   //--------------------------------------------------------------------------------
   const [message,setMessage] = useState("");
@@ -56,7 +50,7 @@ const ChatBox = (props) => {
         <div id="chat-log"> 
         {  
             messageList.map((_message,key)=>{
-            return (<div id={"message_"+key} className="message"><p>{_message.user+": "+_message.message}</p></div>);
+            return (<div key={key} id={"message_"+key} className="message"><p>{_message.user+": "+_message.message}</p></div>);
             })
         }
         </div>

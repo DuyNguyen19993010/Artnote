@@ -1,20 +1,19 @@
 import React from "react";
-import { useState,useRef } from "react";
+import { useState } from "react";
 import Home from "./needToImplementBackEnd/Home";
 import UserHome from "./needToImplementBackEnd/UserHomePage";
-import { NavLink,Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 //-----------------------------User context
 import { UserContext } from "../Context/UserContext";
 import { LayerContext } from "../Context/LayerContext";
 //-----------------------------Pages
 import Welcome from "./needToImplementBackEnd/Welcome"
 import PostPage from "./PostPage";
-import Upload from "./needToImplementBackEnd/Upload";
 import RoomList from "./needToImplementBackEnd/RoomList"
 //-----------------------------Room---------------------
 import Room from "../Room/Room";
 //------------------------------Router------------------
-import { useHistory, useLocation } from "react-router";
+import { useHistory } from "react-router";
 //------------------------------Alert
 import { transitions, positions, Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";

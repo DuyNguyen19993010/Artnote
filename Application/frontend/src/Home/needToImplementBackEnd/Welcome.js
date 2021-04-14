@@ -1,10 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { NavLink, Link, Route, BrowserRouter, Switch } from "react-router-dom";
-import { useHistory, useLocation } from "react-router";
 import { UserContext } from "../../Context/UserContext";
-import { useForm } from "react-hook-form";
-import axios from "axios";
 //-------------------Forms----------------------
 import Register from "./Register"
 import Login from "./Login"
@@ -14,16 +10,12 @@ import "../../Styling/Welcome.css";
 const Welcome = (props) => {
     //User context
     const { user, setUser } = useContext(UserContext);
-    const { Valid } = user;
     //Display 2nd registration stage if register successfully  
     const [showRegStage,setRegStage]  = useState(false)
 
     const secondStageReg = (value)=>{
         setRegStage(value)
     }
-    const showUser = ()=>{
-        console.log(user)
-    } 
   return (
     <div className="welcome">
         <div className = "banner">
