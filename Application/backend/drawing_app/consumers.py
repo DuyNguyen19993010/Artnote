@@ -115,7 +115,22 @@ class CanvasConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         # Check message type and send the message to its corresponding message type
         if(text_data_json['type'] == "stroke" or  text_data_json['type'] == "eraser"):
-            await self.channel_layer.group_send(
+            if(text_data_json['type']=="stroke"):
+                await self.channel_layer.group_send(
+                self.canvas_group,
+                {
+                    'type': text_data_json['type'],
+                    'startPos': text_data_json['startPos'],
+                    'stroke': text_data_json['stroke'],
+                    'brushColor': text_data_json['color'],
+                    'brushSize': text_data_json['brushSize'],
+                    'brushOpacity': text_data_json['brushOpacity'],
+                    'end': text_data_json['end'],
+                    'sender_channel_name':str(self.channel_name)
+                }
+                )
+            else:
+                await self.channel_layer.group_send(
                 self.canvas_group,
                 {
                     'type': text_data_json['type'],
@@ -126,7 +141,8 @@ class CanvasConsumer(AsyncWebsocketConsumer):
                     'brushOpacity': text_data_json['brushOpacity'],
                     'sender_channel_name':str(self.channel_name)
                 }
-            )
+            
+                )
         elif(text_data_json['type'] == "answer_permission"):
             await self.channel_layer.group_send(
                 self.canvas_group,
@@ -173,7 +189,8 @@ class CanvasConsumer(AsyncWebsocketConsumer):
                 'stroke': event['stroke'],
                 'color': event['brushColor'],
                 'brushSize': event['brushSize'],
-                'brushOpacity': event['brushOpacity']
+                'brushOpacity': event['brushOpacity'],
+                'end': event['end']
             }))
     # Message for rendering eraser strokes
     async def eraser(self, event):

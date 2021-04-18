@@ -22,6 +22,9 @@ const Canvas = (props) => {
   //Canvas and Canvas's 2d context reference
   const canvasRef = useRef(null)
   const contextRef = useRef(null)
+  //Main canvas ref
+  const mainCanvasRef = useRef(null)
+  const mainCanvasContextRef = useRef(null)
   //Check if drawing mode is on
   const [isDrawing,setIsDrawing] = useState(false)
   //Check if eye dropper mode is on
@@ -42,15 +45,23 @@ const Canvas = (props) => {
   useEffect(()=>{
       
 
-      //Get Canvas reference  
+      //Get Canvases reference  
       const canvas = canvasRef.current;
-      if(canvas){
-        //Initlizing canvas
+      const mainCanvas = mainCanvasRef.current;
+      if(canvas && mainCanvas){
+        //Initlizing draft canvas
         canvas.width = props.width*2;
         canvas.height = props.height*2;
         canvas.style.width = `${props.width}px`;
         canvas.style.height = `${props.height}px`;
         canvas.style.backgroundColor = `transparent`;
+        canvas.style.opacity = props.brushOpacity
+        //Initlizing main canvas
+        mainCanvas.width = props.width*2;
+        mainCanvas.height = props.height*2;
+        mainCanvas.style.width = `${props.width}px`;
+        mainCanvas.style.height = `${props.height}px`;
+        mainCanvas.style.backgroundColor = `transparent`;
         //if canvas is selected by the parent component then set canvas to be editable
         if(props.selected === props.no){
           canvas.style.pointerEvents = 'auto'
@@ -58,39 +69,45 @@ const Canvas = (props) => {
         else{
           canvas.style.pointerEvents = 'none'
         }
+        mainCanvas.style.pointerEvents = 'none'
         if(props.permission){
           setPermission(true)
         }
         else{
           setPermission(false)
         }
-        //getting and setup the 2d rendering context
-        //Brush props include:
-        //tip
-        //color
-        //lineWidth
+        //Setting up 2d rendering context of draft canvas
         const my_context = canvas.getContext("2d");
         my_context.scale(2,2)
         my_context.lineCap = props.brush.tip
         my_context.lineJoin = props.brush.tip
         my_context.strokeStyle = props.brushColor
         my_context.lineWidth=props.brushSize
+        //Setting up 2d rendering context of main canvas
+        const my_main_context = mainCanvas.getContext("2d");
+        my_main_context.scale(2,2)
+        my_main_context.lineCap = props.brush.tip
+        my_main_context.lineJoin = props.brush.tip
+        my_main_context.strokeStyle = props.brushColor
+        my_main_context.lineWidth=props.brushSize
+        my_main_context.globalAlpha = props.brushOpacity
+        //Storing the 2d context of draft canvas 
+        contextRef.current = my_context
+        //Storing the 2d context of main canvas
+        mainCanvasContextRef.current = my_main_context
         //Draw layer image
-        if(canvasRef.current){
-          console.log("First useEffect")
+        if(mainCanvasContextRef.current){
           if(props.image){
             let img = new Image;
             img.src= "http://localhost:8000"+props.image
             img.crossOrigin = "anonymous";
             img.onload = function(){
-              contextRef.current.globalAlpha  = 1
-              contextRef.current.drawImage(img,0,0,props.width,props.height)
-              contextRef.current.globalAlpha  = props.brushOpacity
+              mainCanvasContextRef.current.globalAlpha  = 1
+              mainCanvasContextRef.current.drawImage(img,0,0,props.width,props.height)
+              mainCanvasContextRef.current.globalAlpha  = props.brushOpacity
             }
           }
         }
-        //Storing the 2d context
-        contextRef.current = my_context
         
         //------------------------------Websocket-----------------------
         //---------------------------Start websocket--------------------
@@ -115,6 +132,7 @@ const Canvas = (props) => {
           if(dataFromServer.type== "stroke"){
             //Set the current brush preference to the sender preference
             contextRef.current.globalCompositeOperation = 'source-over'
+            mainCanvasContextRef.current.globalCompositeOperation = 'source-over'
             setBrushToSenderPref(dataFromServer)
             //draw the stroke
             draw(dataFromServer)
@@ -124,11 +142,12 @@ const Canvas = (props) => {
           if(dataFromServer.type== "eraser"){
             //Set the current brush preference to the sender preference
               contextRef.current.globalCompositeOperation = 'destination-out'
+              mainCanvasContextRef.current.globalCompositeOperation = 'destination-out'
               setBrushToSenderPref(dataFromServer)
               //draw the stroke
-              draw(dataFromServer)
-             //Set back the current brush preference to the client preference based on their current tool
-             resetBrushToClient()
+              erase(dataFromServer)
+              //Set back the current brush preference to the client preference based on their current tool
+              resetBrushToClient()
           }
 
 
@@ -206,16 +225,24 @@ const Canvas = (props) => {
       
     }
   },[])
+  const drawOnMainCanvas = ()=>{
+    mainCanvasContextRef.current.drawImage(canvasRef.current,0,0,props.width,props.height)
+    contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height)
+  }
   //Set brush to sender preference
   const setBrushToSenderPref = (senderData)=>{
     //Save the user preference before changing to sender data
     client_color = contextRef.current.strokeStyle
     client_width = contextRef.current.lineWidth
-    client_opacity = contextRef.current.globalAlpha
+    client_opacity = canvasRef.current.style.opacity
     //Set brush to sender preference
     contextRef.current.strokeStyle = senderData.color
     contextRef.current.lineWidth = senderData.brushSize
-    contextRef.current.globalAlpha = senderData.brushOpacity
+    canvasRef.current.style.opacity = senderData.brushOpacity
+
+    mainCanvasContextRef.current.strokeStyle = senderData.color
+    mainCanvasContextRef.current.lineWidth = senderData.brushSize
+    mainCanvasContextRef.current.globalAlpha = senderData.brushOpacity
   }
   //Reset brush to client preference
   const resetBrushToClient = ()=>{
@@ -223,27 +250,44 @@ const Canvas = (props) => {
     //If tool to brush
     if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
       contextRef.current.globalCompositeOperation = 'source-over'
+      mainCanvasContextRef.current.globalCompositeOperation = 'source-over'
     }
     else{
       //Set tool to eraser
       contextRef.current.globalCompositeOperation = 'destination-out'
+      mainCanvasContextRef.current.globalCompositeOperation = 'destination-out'
     }
     //Set color back to client' s preference
     contextRef.current.strokeStyle = client_color
     contextRef.current.lineWidth = client_width
-    contextRef.current.globalAlpha = client_opacity
+    canvasRef.current.style.opcaity = client_opacity
+    mainCanvasContextRef.current.strokeStyle = client_color
+    mainCanvasContextRef.current.lineWidth = client_width
+    mainCanvasContextRef.current.globalAlpha = client_opacity
   }
 
   //Function for drawing the data received from the server
   const draw =(data)=>{
-          contextRef.current.beginPath()
-          contextRef.current.moveTo(data.startPos.offX,data.startPos.offY)
-          contextRef.current.lineTo(data.stroke.offsetX,data.stroke.offsetY)
-          contextRef.current.stroke()
-          contextRef.current.closePath()
+    contextRef.current.beginPath()
+    contextRef.current.moveTo(data.startPos.offX,data.startPos.offY)
+    contextRef.current.lineTo(data.stroke.offsetX,data.stroke.offsetY)
+    contextRef.current.stroke()
+    if(data.end){
+      mainCanvasContextRef.current.drawImage(canvasRef.current,0,0,props.width,props.height)
+      contextRef.current.clearRect(0,0,canvasRef.current.width,canvasRef.current.height)
+    }
   }
+  //Function for drawing the data received from the server
+  const erase =(data)=>{
+    // mainCanvasContextRef.current.globalAlpha = 1
+    mainCanvasContextRef.current.beginPath()
+    mainCanvasContextRef.current.moveTo(data.startPos.offX,data.startPos.offY)
+    mainCanvasContextRef.current.lineTo(data.stroke.offsetX,data.stroke.offsetY)
+    mainCanvasContextRef.current.stroke()
+    // mainCanvasContextRef.current.globalAlpha = props.brushOpacity
+}
   //----------------Websocket send response from the server----------
-  const addStrokeToGroup= (startPos,stroke)=>{
+  const addStrokeToGroup= (startPos,stroke,end)=>{
     if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
       //Send a stroke if the current tool is brush
       ws.current.send(JSON.stringify({
@@ -252,7 +296,8 @@ const Canvas = (props) => {
         stroke: stroke,
         color:props.brushColor,
         brushSize:props.brushSize,
-        brushOpacity:props.brushOpacity
+        brushOpacity:props.brushOpacity,
+        end:end
       }))
     }
     else{
@@ -276,6 +321,7 @@ const Canvas = (props) => {
     //Change a behaviour for different tool
     if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
       contextRef.current.globalCompositeOperation = 'source-over'
+      mainCanvasContextRef.current.globalCompositeOperation = 'source-over'
       //*Tool = eyedropper
       if(props.brushtool.Tools[2].class.includes('active-tool-box')){
         setisEyeDropper(true)
@@ -287,13 +333,19 @@ const Canvas = (props) => {
     else{
       //*Tool = eraser
       contextRef.current.globalCompositeOperation = 'destination-out'
+      mainCanvasContextRef.current.globalCompositeOperation = 'destination-out'
     }
     //Change brush color
     contextRef.current.strokeStyle = props.brushColor 
+    mainCanvasContextRef.current.strokeStyle = props.brushColor 
     //Change width of the line
     contextRef.current.lineWidth=props.brushSize
-    //Change width of the line
-    contextRef.current.globalAlpha=props.brushOpacity
+    mainCanvasContextRef.current.lineWidth=props.brushSize
+    //Change opacity of the brush
+    // contextRef.current.style.opacity=props.brushOpacity
+    // mainCanvasContextRef.current.globalAlpha=props.brushOpacity
+    canvasRef.current.style.opacity = props.brushOpacity
+    mainCanvasContextRef.current.globalAlpha = props.brushOpacity
     //Change pen pressure(To be added)
     //TODO:
 
@@ -303,9 +355,11 @@ const Canvas = (props) => {
     //Change layer options
     if(props.hidden){
       canvasRef.current.style.display='none'
+      mainCanvasRef.current.style.display='none'
     }
     else{
       canvasRef.current.style.display='block'
+      mainCanvasRef.current.style.display='block'
     }
   },[props])
   //Ask permission to draw on the current layer
@@ -328,7 +382,7 @@ const Canvas = (props) => {
   }, [props.selected])
   //--------------------Eyedropper function----------------------------
   const eyeDropColor =(corrdinate)=>{
-    let pxData = contextRef.current.getImageData(corrdinate.offsetX*2,corrdinate.offsetY*2,1,1);
+    let pxData = mainCanvasContextRef.current.getImageData(corrdinate.offsetX*2,corrdinate.offsetY*2,1,1);
     let eyeDroppedColor = "rgb("+pxData.data[0]+","+pxData.data[1]+","+pxData.data[2]+")"
     props.setColor(eyeDroppedColor)
   }
@@ -340,8 +394,8 @@ const Canvas = (props) => {
       //Only draw when eye dropper mode is off 
       if(permission){
         if(!isEyeDropper){
-          contextRef.current.beginPath()
-          contextRef.current.moveTo(offsetX,offsetY)
+          // contextRef.current.beginPath()
+          // contextRef.current.moveTo(offsetX,offsetY)
         }
         //update currrent pos of mouse
         setPos({...pos, offX:offsetX,offY:offsetY})
@@ -359,14 +413,14 @@ const Canvas = (props) => {
       //Take current corrdinate of mouse
     const {offsetX,offsetY}= nativeEvent
     const corrdinate = {offsetX:offsetX, offsetY:offsetY}
-    if(permission){
-      //update currrent pos of mouse
-      setPos({...pos, offX:offsetX,offY:offsetY})
-      if(!isEyeDropper){
-        contextRef.current.closePath()
-      }
+    //update currrent pos of mouse
+    setPos({...pos, offX:offsetX,offY:offsetY})
+    if(!isEyeDropper){
+      // contextRef.current.closePath()
+      addStrokeToGroup(pos,corrdinate,true)
+      drawOnMainCanvas()
     }
-    let currentImage = canvasRef.current.toDataURL("image/png").replace("data:image/png;base64,", "")
+    let currentImage = mainCanvasRef.current.toDataURL("image/png").replace("data:image/png;base64,", "")
     let formData = new FormData()
     formData.append("layer_id",props.layer_id)
     formData.append("image",currentImage)
@@ -389,24 +443,38 @@ const Canvas = (props) => {
         const corrdinate = {offsetX:offsetX, offsetY:offsetY}
         if(!isEyeDropper){
           //draw the stroke using x and y corrdinate taken above
-          contextRef.current.lineTo(offsetX,offsetY)
-          contextRef.current.stroke()
-
-          console.log(pos,corrdinate)
+          if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
+            contextRef.current.beginPath()
+            contextRef.current.moveTo(pos.offX,pos.offY)
+            contextRef.current.lineTo(offsetX,offsetY)
+            contextRef.current.stroke()
+          }
+          else{
+            mainCanvasContextRef.current.beginPath()
+            mainCanvasContextRef.current.moveTo(pos.offX,pos.offY)
+            mainCanvasContextRef.current.lineTo(offsetX,offsetY)
+            mainCanvasContextRef.current.stroke()
+          }
           //update currrent pos of mouse
-          addStrokeToGroup(pos,corrdinate)
+          addStrokeToGroup(pos,corrdinate,false)
           setPos({...pos, offX:offsetX,offY:offsetY})
           
         }
   }
 
-  return (<canvas id={props.no} className='Canvas'
+  return (<div className = "coupled-layers" style={{zIndex:props.no}}>
+    <canvas id={"main-canvas-"+props.no} className='main-canvas'
+        ref={mainCanvasRef}
+        width={props.width} height = {props.height}
+        />
+    <canvas id={props.no} className='draft-canvas'
         onPointerDown={startDrawing}
         onPointerUp={finishDrawing}
         onPointerMove={drawEvent}
         ref={canvasRef}
-        style={{position: 'absolute',zIndex:props.no,backgroundColor:"transparent"}}
+        width={props.width} height = {props.height}
         />
+        </div>
   );
 };
 
