@@ -33,8 +33,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': text_data_json['type'],
-                'message': text_data_json['msg'],
-                'user': text_data_json['username']
+                'user': text_data_json['username'],
+                'profile_pic': text_data_json['profile_pic'],
+                'message': text_data_json['msg']
             }
         )
 
@@ -43,11 +44,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             'type' : 'message',
+            'user':str(event['user']),
+            'profile_pic':str(event['profile_pic']),
             'message': str(event['message']),
-            'user':str(event['user'])
+            
         }))
 # -----------------------Consumer for handling message from Layering addition--------------------
-class LayerConsumer(AsyncWebsocketConsumer):
+class DrawingRoomConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'room_%s' % self.room_name
@@ -80,7 +83,31 @@ class LayerConsumer(AsyncWebsocketConsumer):
                 'sender_channel_name':str(self.channel_name),
                 'id':text_data_json['id']
             }
-        )
+            )
+        elif(text_data_json['type']=="is_online"):
+            await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': text_data_json['type'],
+                'id':text_data_json['id'],
+                'profile_pic':text_data_json['profile_pic']
+            })
+        elif(text_data_json['type']=="who_is_online"):
+            await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': text_data_json['type']
+                ,'sender_channel_name':str(self.channel_name)
+            })
+        elif(text_data_json['type']=="not_online"):
+            await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': text_data_json['type'],
+                'id':text_data_json['id']
+            })
+
+            
 
     # Receive message from room group
     async def add_canvas_layer(self, event):
@@ -90,6 +117,25 @@ class LayerConsumer(AsyncWebsocketConsumer):
             await self.send(text_data = json.dumps({
                 'type' : 'add_canvas_layer'
                 ,'id':event['id']
+            }))
+            
+    async def is_online(self, event):
+        await self.send(text_data = json.dumps({
+                'type' : 'is_online'
+                ,'id':event['id']
+                ,'profile_pic':event['profile_pic']
+            }))
+    async def not_online(self, event):
+        await self.send(text_data = json.dumps({
+                'type' : 'not_online'
+                ,'id':event['id']
+            }))
+    async def who_is_online(self, event):
+        if(str(self.channel_name) == str(event['sender_channel_name'])):
+            print("same")
+        else:
+            await self.send(text_data = json.dumps({
+                'type' : 'who_is_online'
             }))
 
 # --------------------Consumer for handling stroke from different channel------------------------
@@ -215,17 +261,6 @@ class CanvasConsumer(AsyncWebsocketConsumer):
             }))
     # Message for asking permission to draw on a canvas layer
     async def ask_permission(self, event):
-        # # Send stroke to own WebSocket, then from there, to the client different from current channel client
-        # if(str(self.channel_name) == str(event['sender_channel_name'])):
-        #     print("init_ask_permission message ")
-        # else:
-        #     # Ask if current channel has permission
-        #     await self.send(text_data = json.dumps({
-        #         'type' : 'ask_permission',
-        #         'sender_channel_name': event['sender_channel_name']
-        #     }))
-        # Ask if current channel has permission
-        print("dsadasd")
         await self.send(text_data = json.dumps({
             'type' : 'ask_permission',
             'sender_channel_name': event['sender_channel_name'],

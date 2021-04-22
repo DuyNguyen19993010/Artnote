@@ -31,7 +31,6 @@ const RoomList = (props) => {
   const requestRoom = (data) => {
     console.log(data);
   };
-  console.log(roomList)
   //Show RoomCreate form
   const [showForm,toggleForm] = useState() 
   //-----------------------Set data for roomlist-----------------------
@@ -90,9 +89,6 @@ const RoomList = (props) => {
           <RoomForm/>
         </div>) :(<div>
         </div>)}
-        <div className="options">
-        <img src="https://img.icons8.com/ios-filled/50/000000/menu-2.png"/>
-        </div>
       <div className="Logo">
         <h1>Bring your art closer</h1>
       </div>

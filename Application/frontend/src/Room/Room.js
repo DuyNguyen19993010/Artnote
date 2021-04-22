@@ -21,7 +21,6 @@ const Room = (props) => {
   const [roomName, SetRoomName]= useState("");
   useEffect(()=>{
     axios.get("http://localhost:8000/api/room_get/"+roomID+"/").then((resp) => {
-          console.log(resp.data);
           SetRoomName(resp.data.room_name)
           // props.setRegStage(true)
         }).catch(er=>{

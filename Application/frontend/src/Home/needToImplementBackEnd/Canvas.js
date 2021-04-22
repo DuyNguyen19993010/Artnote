@@ -144,10 +144,12 @@ const Canvas = (props) => {
               contextRef.current.globalCompositeOperation = 'destination-out'
               mainCanvasContextRef.current.globalCompositeOperation = 'destination-out'
               setBrushToSenderPref(dataFromServer)
+              mainCanvasContextRef.current.globalAlpha = 1
               //draw the stroke
               erase(dataFromServer)
               //Set back the current brush preference to the client preference based on their current tool
               resetBrushToClient()
+              mainCanvasContextRef.current.globalAlpha = props.brushOpacity
           }
 
 
@@ -186,10 +188,12 @@ const Canvas = (props) => {
           //-----------------------------------------------------------------------------------------------------------------
           if(dataFromServer.type== "answer_permission"){
             if(dataFromServer.permission == true){
+              window.alert("A user has decline to give you permission to draw on layer "+props.no+".")
               //Does not have permission if there exists a respond that has permission              
               setPermission(false)
             }
             else{
+              window.alert("A user has given you permission to draw on layer "+props.no+".")
               //Does have permission if there exists no respond that has permission
               setPermission(true)
             }
@@ -279,12 +283,11 @@ const Canvas = (props) => {
   }
   //Function for drawing the data received from the server
   const erase =(data)=>{
-    // mainCanvasContextRef.current.globalAlpha = 1
+
     mainCanvasContextRef.current.beginPath()
     mainCanvasContextRef.current.moveTo(data.startPos.offX,data.startPos.offY)
     mainCanvasContextRef.current.lineTo(data.stroke.offsetX,data.stroke.offsetY)
     mainCanvasContextRef.current.stroke()
-    // mainCanvasContextRef.current.globalAlpha = props.brushOpacity
 }
   //----------------Websocket send response from the server----------
   const addStrokeToGroup= (startPos,stroke,end)=>{
@@ -318,8 +321,12 @@ const Canvas = (props) => {
     //Update context2D every time the brush preference or tools are changed in the parent component
     //Change a stroke texture
     contextRef.current.lineCap = props.brush.tip
+    //Change opacity of the brush
+    canvasRef.current.style.opacity = props.brushOpacity
+    mainCanvasContextRef.current.globalAlpha = props.brushOpacity
     //Change a behaviour for different tool
     if(!props.brushtool.Tools[1].class.includes('active-tool-box')){
+      mainCanvasContextRef.current.globalAlpha = props.brushOpacity
       contextRef.current.globalCompositeOperation = 'source-over'
       mainCanvasContextRef.current.globalCompositeOperation = 'source-over'
       //*Tool = eyedropper
@@ -332,6 +339,7 @@ const Canvas = (props) => {
     }
     else{
       //*Tool = eraser
+      mainCanvasContextRef.current.globalAlpha = 1
       contextRef.current.globalCompositeOperation = 'destination-out'
       mainCanvasContextRef.current.globalCompositeOperation = 'destination-out'
     }
@@ -341,17 +349,6 @@ const Canvas = (props) => {
     //Change width of the line
     contextRef.current.lineWidth=props.brushSize
     mainCanvasContextRef.current.lineWidth=props.brushSize
-    //Change opacity of the brush
-    // contextRef.current.style.opacity=props.brushOpacity
-    // mainCanvasContextRef.current.globalAlpha=props.brushOpacity
-    canvasRef.current.style.opacity = props.brushOpacity
-    mainCanvasContextRef.current.globalAlpha = props.brushOpacity
-    //Change pen pressure(To be added)
-    //TODO:
-
-
-
-    
     //Change layer options
     if(props.hidden){
       canvasRef.current.style.display='none'
@@ -371,12 +368,14 @@ const Canvas = (props) => {
   //Check what layer the user has just selected and ask permission to access that layer
   useDidUpdate(()=>{
     if(props.selected == props.no){
+      canvasRef.current.style.touchAction  = 'auto'
       canvasRef.current.style.pointerEvents = 'auto'
       if(!permission){
         askPermission()
       }
     }
     else{
+      canvasRef.current.style.touchAction  = 'none'
       canvasRef.current.style.pointerEvents = 'none'
     }
   }, [props.selected])
@@ -401,6 +400,9 @@ const Canvas = (props) => {
         setPos({...pos, offX:offsetX,offY:offsetY})
         setIsDrawing(true)
 
+      }
+      else{
+        window.alert("You currently don't have permission to draw on this layer.\nA user will give you permission in no time.")
       }
       if(isEyeDropper){
         eyeDropColor(corrdinate)
@@ -450,6 +452,7 @@ const Canvas = (props) => {
             contextRef.current.stroke()
           }
           else{
+            
             mainCanvasContextRef.current.beginPath()
             mainCanvasContextRef.current.moveTo(pos.offX,pos.offY)
             mainCanvasContextRef.current.lineTo(offsetX,offsetY)
@@ -469,6 +472,7 @@ const Canvas = (props) => {
         />
     <canvas id={props.no} className='draft-canvas'
         onPointerDown={startDrawing}
+        onPointerLeave ={finishDrawing}
         onPointerUp={finishDrawing}
         onPointerMove={drawEvent}
         ref={canvasRef}

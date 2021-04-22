@@ -20,9 +20,15 @@ const Login = (props) => {
         console.log(res.data)
         var my_token = res.data.token
         axios.get("http://localhost:8000/api/profile_get/"+res.data.id+"/",{headers:{'Authorization':"Token "+my_token,'Content-Type':'false'}}).then(resp=>{
+
         if(resp.data.Message!=="You are not authorized"){
-          setUser({ ...user, Valid: true, token: my_token,profile:resp.data.profile ,ID:resp.data.user.id,username:resp.data.user.username});
-          history.push('/Home/')
+          if(resp.data.profile){
+            setUser({ ...user, Valid: true, token: my_token,profile:resp.data.profile ,ID:resp.data.user.id,username:resp.data.user.username});
+            history.push('/Home/')
+          }
+          else{
+            alert("User does not exist")
+          }
         }
         else{
           alert("You are not authorized")

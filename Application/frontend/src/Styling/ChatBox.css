@@ -6,14 +6,103 @@
     right: 10%;
     bottom: 5%;
 }
+#ChatBox button{
+    background-color: #0773FF;
+    color: white;
+    border:0.3px solid rgb(177, 177, 177);
+    font-weight: 600;
+    font-size: 15px;
+}
 #ChatBox #chat-log{
-    background-color: rgb(184, 184, 184);
+    background-color: rgb(255, 255, 255);
+    border:0.6px solid rgb(177, 177, 177);
     position: relative;
     size: 100%;
     width: 100%;
     height: 100%;
     overflow-y: scroll;
+    scrollbar-color: #0773FF transparent;
+    scrollbar-width: thin;
 }
+
+#ChatBox #chat-log .no-message-wrapper {
+    opacity: 0.2;
+    text-align: center;
+    margin-top: 90px;
+}
+#ChatBox #chat-log .no-message-wrapper  h1{
+    font-size: 30px;
+}
+#ChatBox #chat-log .message-wrapper{
+    display: grid;
+    grid-template-columns: 20% 70%;
+    margin-bottom: 10px;
+}
+
+#ChatBox #chat-log .message-wrapper .user-wrapper{
+    
+    word-break: break-all;
+    width: 40px;
+    text-align: center;
+    background-color: transparent;
+}
+#ChatBox #chat-log .message-wrapper .profile_pic{
+    width: 40px;
+    height: 40px;
+    text-align: center;
+}
+#ChatBox #chat-log .message-wrapper .profile_pic img{
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    border-radius: 25px;
+}
+#ChatBox #chat-log .message-wrapper .username{
+    font-weight: 600;
+    font-size: 15px;
+    color: rgb(71, 71, 71);
+}
+
+#ChatBox #chat-log .message-wrapper .text-area {
+    background-color: #d3d3d3;
+    border:1.5px rgb(179, 179, 179) solid;
+    border-radius: 6px;
+    width: 183px;
+    word-break: break-all;
+}
+#ChatBox #chat-log .message-wrapper .text-area p{
+    font-weight: 400px;
+}
+#ChatBox #chat-log .message-wrapper .text-area-own-message {
+    background-color: #0773FF;
+    color: white;
+    border:1.5px rgb(179, 179, 179) solid;
+    border-radius: 6px;
+    width: 183px;
+    word-break: break-all;
+}
+#ChatBox #chat-log .message-wrapper .text-area-own-message p{
+    font-weight: 400px;
+}
+#ChatBox #chat-log .message-wrapper .text-area p{
+    display: block;
+}
+#ChatBox #chat-log .message-wrapper-own-message{
+    display: grid;
+    grid-template-columns: 70% 20%;
+    margin-bottom: 10px;
+}
+#ChatBox #chat-log .message-wrapper-own-message .text-area{
+    margin-left: 10px;
+}
+#ChatBox #chat-log .message-wrapper-own-message .user-wrapper{
+    margin-left: 30px;
+}
+
 #ChatBox #chat-message-input{
     width: 100%;
+    background-color: white;
+    border-left:1.5px rgb(179, 179, 179) solid;
+    border-right:1.5px rgb(179, 179, 179) solid;
+    border-bottom:1.5px rgb(179, 179, 179) solid;
 }

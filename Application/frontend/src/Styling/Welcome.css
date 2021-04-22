@@ -7,39 +7,76 @@
   }
 /* -----------------------Banner---------------------------- */
 .welcome{
-    height: 100%;
     background-color: rgb(247, 247, 247);
     max-width: 100%;
     margin: 0;
     height: 100vh;  
-    display: grid;
-    grid-template-rows: 10% 90% ;
+    display: block;
+    overflow:scroll;
+}
+.welcome .header{
+    background: 
+    /* top, transparent red, faked with gradient */ 
+    linear-gradient(
+      rgba(134, 142, 255, 0.45), 
+      rgba(30, 43, 216, 0.76)
+    ),
+    /* bottom, image */
+    url(https://www.bookastreetartist.com/assets/home/flamingos-def32e91622da6a0519245967cfbdd6169e09e58c2a5f08348186bf13b82725c.jpg);
+    height: 700px;
+    background-size:cover;
 }
 .welcome .banner {
-    background-color: rgb(53, 67, 255);
+    margin-left: 40%;
     color:white;
     text-align: center;
-    height: 100%;
+    height: 100px;
+    font-size: 300px;
+    width: 400px;
+    word-break: break-all;
+}
+.welcome .banner h1{
+    font-size: 90px;
+    font-weight: 1000;
+    
 }
 
 /* -------------------Account area-------------------- */
 .welcome .Account-area{
-    background-color: rgb(247, 247, 247);
-    height: 100%;
+    height: 600px;
+    margin-top:120px;
+    overflow-x: scroll;
+    scrollbar-color: #0773FF transparent;
+    scrollbar-width: thin;
 }
 .welcome .Account-area .Form{
     border-radius: 20px;
     width: 50%;
-    background-color:  rgb(53, 67, 255);
+    background-color:  rgb(255, 255, 255);
     margin-left: 25%;
-    margin-top: 5%;
     display: grid;
     text-align: center;
     grid-template-columns: 45% 10% 45%;
-    overflow-y: scroll;
+    /* overflow-x: scroll;
+    scrollbar-color: #0773FF transparent;
+    scrollbar-width: thin; */
+}
+.welcome .Account-area .RegFormSec{
+    border-radius: 20px;
+    width: 50%;
+    background-color:  rgb(255, 255, 255);
+    margin-left: 25%;
+    display: grid;
+    text-align: center;
+    grid-template-columns: 45% 10% 45%;
+    scrollbar-color: #0773FF transparent;
+    scrollbar-width: thin;
+    height: 400px;
+    overflow-x: scroll;
 }
 .welcome .Account-area .Form .FormName{
-    color: rgb(247, 247, 247);
+    color: #6872ff;
+    font-weight: 600;
 }
 /* -------Form---------- */
 .welcome .Account-area .Form form{
@@ -48,7 +85,7 @@
     height: 200px;
 }
 .welcome .Account-area .Form form label{
-    color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     font-weight: 500;
 }
 .welcome .Account-area .Form form input{
@@ -80,4 +117,116 @@
     display: block;
     width: 30%;
     margin-left: 35%;
+}
+/* intorduction  */
+.welcome .introduction{
+    background-color: rgb(249, 254, 255);
+    height: 900px;
+    width: 100%;
+}
+.welcome .introduction .our-greeting{
+    font-style: italic;
+    font-size: 200px;
+    text-align: center;
+}
+.welcome .introduction .brief-intro-wrapper{
+    position: relative;
+    top:100px;
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.welcome .introduction .brief-intro-wrapper .image-wrapper{
+    background-color: rgb(255, 255, 255);
+    width: 600px;
+    margin-left: 300px;
+
+}
+.welcome .introduction .brief-intro-wrapper .image-wrapper img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.welcome .introduction .brief-intro-wrapper .text-area{
+    color: rgb(71, 71, 71);
+    padding-right: 30px;
+    width: 500px;
+    word-break: break-word;
+
+}
+.welcome .introduction .brief-intro-wrapper .text-area p{
+    font-style: italic;
+    font-size: 25px;
+    font-weight: 500;
+}
+/* features */
+.welcome .features-explaination{
+    background-color: white;
+    width: 100%;
+    height: 800px;
+}
+.welcome .features-explaination .feature-banner{
+    color:rgb(64, 72, 175);
+    font-style: italic;
+    font-size: 200px;
+    text-align: center;
+}
+.welcome .features-explaination .features-wrapper{
+    position: relative;
+    width: 100%;
+    height: 800px;
+    display: grid;
+    grid-template-columns: 30% 30% 30%;
+}
+.welcome .features-explaination .features-wrapper .feature{
+    background-color: rgb(255, 255, 255);
+    margin-left:25% ;
+    width: 500px;
+    height: 600px;
+}
+.welcome .features-explaination .features-wrapper .feature .image{
+    position: relative;
+    top:60px;
+    width: 100%;
+    height: 400px;
+}
+.welcome .features-explaination .features-wrapper .feature .image img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    
+    
+}
+
+.welcome .features-explaination .features-wrapper .feature .text-area{
+    
+    word-break: break-word;
+    padding-right: 10px;
+    color: rgb(83, 83, 83);
+    text-align: center;
+}
+.welcome .features-explaination .features-wrapper .feature .text-area h3{
+    font-size: 40px;
+    color: black;
+    font-weight: 600;
+    font-style: italic;
+}
+
+.welcome .features-explaination .features-wrapper .feature .text-area p{
+    font-size: 20px;
+    font-style: italic;
+}
+
+.welcome .footer{
+    background-color: rgb(53, 67, 255);
+    width: 100%;
+    height: 150px;
+    margin-top: 100px;
+    text-align: center;
+
+}
+.welcome .footer h3{
+    color: white;
+    font-size: 50px;
+    position: relative;
+    top:30px
 }

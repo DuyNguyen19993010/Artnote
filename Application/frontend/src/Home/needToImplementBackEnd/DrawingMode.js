@@ -18,7 +18,6 @@ const DM = (props) => {
   const { user, setUser } = useContext(UserContext);
   const [color,setColor]=useState('#bbb');
   const [canvases,setCanvas]=useState({Layers:[]})
-  // const [canvases,setCanvas]=useState({Layers:[{no:0,hidden:false,permission:true},{no:1,hidden:false,permission:true},{no:2,hidden:false,permission:true},{no:3,hidden:false,permission:true}]})
   const [selectedLayer,SelectLayer]=useState(0)
   //Permission dialog
   const [permission_dialog_visible, setPermissionDialogVisibility] = useState(true)
@@ -49,12 +48,15 @@ const DM = (props) => {
   //Tool circle initialization
   const colorPickerCicleRef = useRef(null)
   const layerCircleRef = useRef(null)
+  //Online array
+  const [online,setOnline] = useState({status:[]})
   // reference for the websocket
   const ws = useRef(null)
   //unMount
   const [unMount,setMount] = useState(false)
   //
   useEffect(()=>{
+        window.addEventListener('beforeunload',leaveSession);
         axios.get("http://localhost:8000/api/layers_get/"+props.roomID+"/").then((resp) => {
           if(resp.data.Layers.length!=0){
             setCanvas({...canvases,Layers:resp.data.Layers}) 
@@ -88,8 +90,15 @@ const DM = (props) => {
         ws.current = new w3cwebsocket('ws://localhost:8000/DrawingRoom/'+props.roomID+'/')
         //----------------------------Open websocket--------------------
         ws.current.onopen = ()=>{
-          //Send layer initialize message
-          
+          //Send isOnline message
+          ws.current.send(JSON.stringify({
+            type:"is_online",
+            id:user.ID,
+            profile_pic:user.profile.profile_pic
+          }))
+          ws.current.send(JSON.stringify({
+            type:"who_is_online"
+          }))
 
         }
         ws.current.onclose = () => {
@@ -97,17 +106,27 @@ const DM = (props) => {
         };
       
   },[])
-  const give_last_layer_index = ()=>{
-    let layer_list =[...canvases.Layers]
-    return layer_list.length
-  } 
+  
   useEffect(()=>{
     ws.current.onmessage = (message) =>{
       const dataFromServer = JSON.parse(message.data);
         //Add layer message
-        if(dataFromServer.type =="add_canvas_layer"){
+        if(dataFromServer.type ==="add_canvas_layer"){
 
           group_add_layer(dataFromServer)
+        }
+        else if(dataFromServer.type ==="is_online"){
+          addOnlineStatus(dataFromServer)
+        }
+        else if(dataFromServer.type ==="who_is_online"){
+          ws.current.send(JSON.stringify({
+            type:"is_online",
+            id:user.ID,
+            profile_pic:user.profile.profile_pic
+          }))
+        }
+        else if(dataFromServer.type ==="not_online"){
+          removeOnlineStatus(dataFromServer)
         }
         //Delete layer message
     } 
@@ -117,7 +136,30 @@ const DM = (props) => {
       
     }
   })
-
+  const removeOnlineStatus = (data)=>{
+    let temp_arr = online.status
+    let valid_to_remove = false
+    for(let i=0; i<temp_arr.length;i++){
+      if(temp_arr[i].id == data.id){
+        temp_arr.splice(i,1)
+        setOnline({...online,status:temp_arr})
+        break
+      }
+    }
+  }
+  const addOnlineStatus = (data)=>{
+    let temp_arr = online.status
+    let valid_to_add = true
+    temp_arr.forEach(user => {
+      if(user.id == data.id){
+        valid_to_add = false
+      }
+    });
+    if(valid_to_add){
+      temp_arr.push(data)
+      setOnline({...online,status:temp_arr})
+    }
+  }
   const group_add_layer = (dataFromServer)=>{
     //Add layer
     let layer_list =[...canvases.Layers]
@@ -237,13 +279,30 @@ const DM = (props) => {
     })
   }
   const leaveSession = ()=>{
+    ws.current.send(JSON.stringify({
+      type:"not_online",
+      id:user.ID
+    }))
     setMount(true)
     props.unMountFunction(ws)
   }
   return (
   <div className="DM">
-      <button className="leave-session" onClick={()=>{leaveSession()}}>Leave session</button>
+    {/* Button for leaving room session */}
+    <button className="leave-session" onClick={()=>{leaveSession()}}>Leave session</button>
     <div className = "optionBar"> 
+      {online.status.length!=0? (<div className="status-vertical-line"></div>):(<div/>)}
+      <div className= "login-status-wrapper">
+        {
+          online.status.map((status,key)=>{
+            return(<div key={key} className="login-status">
+            <img className="status-profile-pic" alt="No avatar" src= {"http://localhost:8000"+status.profile_pic}/>
+            <img className="online-dot" alt ="no image" src ="https://img.icons8.com/emoji/10/000000/green-circle-emoji.png" />
+          </div>)
+
+          })
+        }
+      </div>
 
     </div>
     <div className = "toolBar"> 
@@ -271,10 +330,8 @@ const DM = (props) => {
       settingOpen? (<div className="brush_setting">
       <div className="header"><h3>Setting</h3></div>
       <ul>
-        <li><label className="brush_setting_header">Size</label><input type="range" min="1" max="100" value={penSize} onChange={(e)=>{ChangePenSize(e.target.value)}} className="brush_setting_slider"/></li> 
-        <li><label className="brush_setting_header">Density</label><input type="range" min="1" max="100" value={penDensity} onChange={(e)=>{ChangePenDensity(e.target.value)}} className="brush_setting_slider"/></li> 
+        <li><label className="brush_setting_header">Size</label><input type="range" min="1" max="100" value={penSize} onChange={(e)=>{ChangePenSize(e.target.value)}} className="brush_setting_slider"/></li>  
         <li><label className="brush_setting_header">Opacity</label><input type="range" min="0" max="1" step="0.1" value={penOpacity} onChange={(e)=>{ChangePenOpacity(e.target.value)}} className="brush_setting_slider"/></li> 
-        <li><label className="brush_setting_header">Hardness</label><input type="range" min="1" max="100" value={penHardness} onChange={(e)=>{ChangePenHardness(e.target.value)}} className="brush_setting_slider"/></li> 
         <li><label className="brush_setting_header">Pressure:</label><input type="checkbox" checked={pressureOn} onChange={()=>{togglePressure(!pressureOn)}} className="brush_setting_checkbox"/></li> 
       </ul>
     </div>):(<div></div>)

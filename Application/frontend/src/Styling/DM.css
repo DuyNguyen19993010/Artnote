@@ -3,6 +3,8 @@
     max-width: 100%;
     margin: 0;
     height: 100vh;
+    z-index: 90;
+    overflow:hidden;
 }
 .DM .colorPicker{
     position: fixed;
@@ -48,8 +50,8 @@
 /* ---------------Styling layersystem------------- */
 .DM .Layers{
     position: fixed;
-    right: 5%;
-    bottom: 30%;
+    left: 7%;
+    bottom: 5%;
     background-color: #E5E5E5;
     width: 300px;
     border-radius: 10px;
@@ -128,14 +130,13 @@
 
 .DM .optionBar{
     background-color: #303030;
-    position: fixed;
     width: 100%;
-    height: 4%;
+    height: 3%;
 }
 .DM .toolBar{
+    border-top: rgba(128, 128, 128, 0.514) solid 1px;
+    padding-top: 10px;
     background-color: #303030;
-    position: fixed;
-    top:4.2%;
     width: 60px;
     height: 100%;
 }
@@ -143,7 +144,6 @@
     transition:0.3s;
     display: block;
     text-align: center;
-    margin: 4px;
     margin-bottom: 20px;
     background-color: #6D6D6D;
     border-radius: 40px;
@@ -270,4 +270,48 @@
 .DM .leave-session:active{
     background-color: rgb(110, 37, 25);
     outline: 0;
+}
+/* Login status */
+.DM .optionBar .status-vertical-line{
+    position: absolute;
+    background-color: grey;
+    width: 1px;
+    height: 20px;
+    left:1840px;
+    top:4px;
+}
+
+.DM .optionBar .login-status-wrapper{
+    position: relative;
+    left: 1842px;
+    width: 300px;
+    height: 100%;
+    z-index: 40;
+    overflow-y:hidden;
+    scrollbar-color: #0773FF transparent;
+    scrollbar-width: thin;
+    white-space: nowrap;
+    
+}
+.DM .optionBar .login-status-wrapper .login-status{
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 3px;
+    margin-left: 3px;
+    
+}
+.DM .optionBar .login-status-wrapper .login-status .status-profile-pic{
+    border-radius: 30px;
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+.DM .optionBar .login-status-wrapper .login-status .online-dot{
+    position: relative;
+    z-index: 41;
+    width: 10px;
+    height: 10px;
+    right:5px;
+    top:8px
 }

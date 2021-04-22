@@ -2,6 +2,7 @@
     margin: 0px;
     background-color: #E5E5E5;
     height: fit-content;
+    overflow:hidden;
 }
 .UserHome .user-info-wrapper{
     text-align: center;
