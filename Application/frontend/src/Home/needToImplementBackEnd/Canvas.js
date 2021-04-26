@@ -472,7 +472,6 @@ const Canvas = (props) => {
         />
     <canvas id={props.no} className='draft-canvas'
         onPointerDown={startDrawing}
-        onPointerLeave ={finishDrawing}
         onPointerUp={finishDrawing}
         onPointerMove={drawEvent}
         ref={canvasRef}

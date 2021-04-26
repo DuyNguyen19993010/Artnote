@@ -269,7 +269,6 @@ class CanvasConsumer(AsyncWebsocketConsumer):
             
     # Message for give or deny permission
     async def answer_permission(self, event):
-        print("heyyysyaydyadsyadsyayd")
         # Send answer for permission back to the channel asking
         if(str(self.channel_name) == str(event['sender_channel_name'])):
             # if there exist a channel with permission=True, don't allow permission
