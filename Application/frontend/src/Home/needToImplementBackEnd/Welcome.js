@@ -38,7 +38,7 @@ const Welcome = (props) => {
                     </div></div>):(<div className ="RegFormSec Form">
                             <div className ="RegisterSecForm">
                         <h1 className="FormName">Your information</h1>
-                        <ProfileForm />
+                        <ProfileForm returnHomePage={secondStageReg}/>
                     </div>
                     </div>)}
                     {/* <div className ="RegFormSec Form">

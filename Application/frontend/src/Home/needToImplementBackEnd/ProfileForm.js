@@ -27,9 +27,10 @@ const ProfileForm = (props) => {
     formData.append('user',user.ID)
     axios.post("http://localhost:8000/api/profile/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
       axios.get("http://localhost:8000/api/profile_get/"+user.ID+"/").then(resp=>{
-        setUser({ ...user, Valid: true,profile:resp.data.profile});
-        console.log(user)
-        history.push('/Home/')
+        // setUser({ ...user, Valid: true,profile:resp.data.profile});
+        // console.log(user)
+        alert("Registeration success. Please log in.")
+        props.returnHomePage(false)
         })
     }).catch(error=>{
       console.error(error)

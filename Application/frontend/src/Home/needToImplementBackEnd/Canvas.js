@@ -364,6 +364,7 @@ const Canvas = (props) => {
     ws.current.send(JSON.stringify({
       type:"ask_permission"
     }))
+    alert("Asking a user for permission to draw on this layer. A message will appear when that user reply.")
   }
   //Check what layer the user has just selected and ask permission to access that layer
   useDidUpdate(()=>{
@@ -402,7 +403,7 @@ const Canvas = (props) => {
 
       }
       else{
-        window.alert("You currently don't have permission to draw on this layer.\nA user will give you permission in no time.")
+        window.alert("You currently don't have permission to draw on this layer.\nClick on the layer to ask for permission or create a new layer")
       }
       if(isEyeDropper){
         eyeDropColor(corrdinate)
