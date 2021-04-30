@@ -33,6 +33,8 @@ const RoomList = (props) => {
   };
   //Show RoomCreate form
   const [showForm,toggleForm] = useState() 
+  //Search term
+  const [searchTerm,setTerm] = useState("")
   //-----------------------Set data for roomlist-----------------------
   useEffect(()=>{
     if(filter == "Joined"){
@@ -79,14 +81,17 @@ const RoomList = (props) => {
       }).catch(error=>{
         console.log(error)
       })
-  }
+  }  
+  useEffect(()=>{
+    console.log(searchTerm)
+  },[searchTerm])
   return (
     <div className="Rooms">
       <HomeButton/>
         {showForm? (<div className = "RoomForm">
           <h1>Room Creation</h1>
           <img className="closeFormButton" onClick={()=>{toggleForm(false)}} src="https://img.icons8.com/fluent-systems-filled/48/000000/x.png"/>
-          <RoomForm/>
+          <RoomForm closeForm={toggleForm}/>
         </div>) :(<div>
         </div>)}
       <div className="Logo">
@@ -95,7 +100,7 @@ const RoomList = (props) => {
 
       {/* ---------------------search bar----------------------- */}
         <form className="search" onSubmit={handleSubmit(requestRoom)}>
-          <input placeholder="Search a group"
+          <input placeholder="Search a group" onChange={(event)=>{setTerm(event.target.value)}}
             name="roomNo"
             type="text"
             ref={register({ required: true, minLength: 2 })}
@@ -110,12 +115,19 @@ const RoomList = (props) => {
         <NavLink  className='navlink' activeClassName='active_nav' to="/RoomList/Public" exact={true}>Public</NavLink>
         <NavLink  className='navlink' activeClassName='active_nav' to="/RoomList/Joined" exact={true}>Joined</NavLink>
       </nav>
-
+          
 
       {/* ------------------------Render room----------------------- */}
       <div className="card-deck">
         {
-          roomList.map((room,key)=>{
+          roomList.filter((item)=>{
+            if(searchTerm == ""){
+              return item
+            }
+            else if(item.room_name.toLowerCase().includes(searchTerm.toLowerCase())){
+              return item
+            }
+          }).map((room,key)=>{
             return (<div key={key}  className="room card" id={"room_"+key} >
               {/* ------------NavLink used to go to room and set roomName parameter----- */}
               {filter != "Joined"? (
@@ -142,19 +154,3 @@ const RoomList = (props) => {
 };
 
 export default RoomList;
-
-
-
-{/* <div className = "list">
-        <form onSubmit={handleSubmit(requestRoom)}>
-          <label><h1>Join a room</h1></label>
-          <br />
-          <input
-            name="roomNo"
-            type="text"
-            ref={register({ required: true, minLength: 2 })}
-          />
-          <input type="submit" />      
-          <br />  
-        </form>
-      </div> */}

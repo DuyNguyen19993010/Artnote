@@ -409,6 +409,24 @@ def comment(request):
     comment['profile'] = profile
         
     return JsonResponse({"comment":comment})
+@csrf_exempt
+@Custom_token_authorization
+def artist_search(request,keyword):
+    artist_query = User.objects.filter(username__contains=keyword)
+    all_artists = UserSerializer(artist_query, many=True).data
+    print("Start",len(all_artists))
+    for artist in all_artists:
+        user_queryset = User.objects.get(pk = artist['id'])
+        try:
+            profile_queryset = Profile.objects.get(user= user_queryset)
+            profile = ProfileSerializer(profile_queryset).data
+            artist['profile_pic']= profile['profile_pic']
+        except:
+            artist['profile_pic']= None
+        
+    print("End",len(all_artists))
+    return JsonResponse({"artists":all_artists})
+
 
     
 

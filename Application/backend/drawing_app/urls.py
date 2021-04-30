@@ -31,5 +31,6 @@ urlpatterns = [
     path('dislike/',views.dislike),
     path('like_check/',views.like_check),
     path('comments_get/<int:post_id>/',views.comments),
-    path('comment_get/',views.comment)
+    path('comment_get/',views.comment),
+    path('artist_search/<str:keyword>/',views.artist_search)
 ]

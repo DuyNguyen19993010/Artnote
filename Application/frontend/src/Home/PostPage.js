@@ -26,7 +26,8 @@ const PostPage = (props) => {
   const [comments, setComment]= useState({comments:[]})
   //Comment form 
   const { register, handleSubmit } = useForm();
- 
+  //My comment
+  const [myComment, setMyComment] = useState("")
   //like comment interaction
   const like_comment_Interaction = ()=>{
     let formData = new FormData()
@@ -91,7 +92,6 @@ const PostPage = (props) => {
       });
   }
   const onSubmit = (data) => {
-    console.log(data)
     let formData = new FormData()
     formData.append('comment',data.comment)
     formData.append('user',user.ID)
@@ -105,6 +105,7 @@ const PostPage = (props) => {
         comment_temp.push(resp.data.comment)
         setComment({...comments,comments:comment_temp})
         like_comment_Interaction()
+        setMyComment("")
       })
     })
   };
@@ -159,7 +160,7 @@ const PostPage = (props) => {
           }
         </div>
         <form className="comment-form" encType="multipart/form-data" onSubmit={handleSubmit(onSubmit)}>
-            <input className="comment-input" name="comment" type="text" ref={register({ required: true })} />
+            <input value={myComment} onChange={(e)=>{setMyComment(e.target.value)}} className="comment-input" name="comment" type="text" ref={register({ required: true })} />
         <input className="submitButton" type="submit" />
         </form>
       </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext, useEffect,useCallback } from "react";
+import { useState, useContext, useEffect,useCallback, useRef } from "react";
 //Other import
 import {useHistory } from "react-router";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,7 @@ import Post from "../Post"
 import HomeButton from "./HomeButton"
 //CSS
 import "../../Styling/Home.css";
+import { NavLink } from "react-router-dom";
 const Home = (props) => {
   //User context: user:{ID,email,Valid}
   const { user, setUser } = useContext(UserContext);
@@ -33,6 +34,12 @@ const Home = (props) => {
   const [pic,setPic] = useState()   
   //image data
   const [imgData, setImgData] = useState(null);
+  //Toggle search menu
+  const [searchMenu, toggleSearch] = useState(false)
+  const [searchTerm, setTerm] = useState("")
+  const [loadingSearch,setLoadingSearch] = useState(false) 
+  const [searchList, setSearchList] = useState([]) 
+  const menubar = useRef(null)
   //-----------------------------Get new images-------------------------------------
   const feedNewImages = useCallback(e=>{
     const{key,keyCode}=e;
@@ -99,9 +106,13 @@ const Home = (props) => {
     formData.append('image',pic)
     formData.append('user',user.ID)
     axios.post("http://localhost:8000/api/post/",formData,{headers:{'Authorization':"Token "+user.token,'Content-Type':'false'}}).then((res) => {
-      console.log(res.data)
+      togglePostForm(false)
     })
   };
+  //Search
+  const search = (data)=>{
+    console.log("searching for"+data+".....")
+  }
   const handleImagePreview = (evt)=>{
     if(evt.target.files[0]){
       setPic(evt.target.files[0])
@@ -119,14 +130,68 @@ const Home = (props) => {
       console.log(res.data)
     })
   }
+  useEffect(()=>{
+    if(menubar.current){
+      if(searchMenu){
+        menubar.current.className="navbar-wrapper-active"
+
+      }
+      else{
+        menubar.current.className="navbar-wrapper"
+      }
+    }
+  },[searchMenu])
+  useEffect(()=>{ 
+    if(searchTerm !="" && !loadingSearch){
+      setLoadingSearch(true)
+      axios.get("http://localhost:8000/api/artist_search/"+searchTerm+"/",{headers:{'Authorization':"Token "+user.token,'Content-Type':'false',}}).then((res) => {
+      setSearchList(res.data.artists)
+      console.log(res.data.artists)
+      setLoadingSearch(false)
+    })
+    }
+    else{
+      setSearchList([])
+    }
+  },[searchTerm])
   //--------------------------------------------------------------------------------
   return (
     <div className="Home">
       <HomeButton/>
       {/*---------------------Nav bar-------------------------*/}
-      {/* <div className ="navbar-wrapper">
+      <div  ref={menubar} className ="navbar-wrapper">
+        <div className="search-button-wrapper">
+          <div className="search-icon">
+          <img src="https://img.icons8.com/fluent-systems-filled/32/ffffff/search-client.png" onClick={()=>{toggleSearch(!searchMenu)}}/>
+          </div>
+          <div className="search-bar-wrapper">
+            <input className="search-bar"
+                placeholder="Search for an artist"
+                onChange = {evt =>{setTerm(evt.target.value)}}
+                value = {searchTerm}
+                name="search_term"
+                type="text"
+              /> 
+          </div>
+        </div>
 
-      </div> */}
+        <div className="user-search-display">
+          {
+            searchList?(
+              searchList.map((val, key)=>{
+                return ( 
+                <div className="user-info">
+                  <NavLink className="navlinks" to={"/user/"+val.id}><div className="user-picture-wrapper"><img src={val.profile_pic? ("http://localhost:8000"+val.profile_pic):("https://www.enduresc.com.au/wordpress/wp-content/uploads/2018/05/user-profile.jpg")}/></div></NavLink>
+                  <NavLink className="navlinks" to={"/user/"+val.id}><div className="username"><h2>{val.username}</h2></div></NavLink>
+                </div>)
+              })
+            ):(<div/>)
+          }
+        </div>
+        <div className="user-profile">
+          <img src={user.profile?("http://localhost:8000"+user.profile.profile_pic):("https://www.enduresc.com.au/wordpress/wp-content/uploads/2018/05/user-profile.jpg")}/>
+        </div>
+      </div>
       {/* -----------------------Create post button---------------------- */}
       { postForm? (<button disabled className="create-post-button">Post an artwork</button>):(<button onClick={()=>{togglePostForm(true)}} className="create-post-button">Post an artwork</button>) }
       {/* --------------------------Post form----------------------- */}

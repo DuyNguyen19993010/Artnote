@@ -52,11 +52,11 @@ button:focus{
 }
 
 .Home .feed-area .filter-wrapper #popular-filter{
-  left:0px;
+  left:100px;
   top:10px;
 }
 .Home .feed-area .filter-wrapper #latest-filter{
-  left:180px;
+  left:290px;
   top:10px;
 }
 .Home .feed-area .filter-wrapper .filter{
@@ -82,7 +82,7 @@ button:focus{
   color: #7A7676;
   font-size: 20px;
   border-radius: 26px;
-  left: 1650px;
+  left: 1850px;
   top:40px;
 }
 .Home .create-post-button:focus{
@@ -96,6 +96,7 @@ button:focus{
 
 /* ----------------------Post form-------------------- */
 .Home .post-form-wrapper{
+
   border: #707070 2px solid;
   background-color: white;
   width: 493px;
@@ -137,4 +138,203 @@ button:focus{
 }
 .Home .post-form-wrapper .close-button:focus{
   outline: 0;
+}
+/* Navbar */
+.Home .navbar-wrapper{
+  overflow-x: hidden;
+  transition: 0.5s;
+  background-color: #303030;
+  width: 50px;
+  height: 100%;
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: 5% 90% 5%;
+  overflow: hidden ;
+}
+.Home .navbar-wrapper .search-button-wrapper{
+  height: 50px;
+  width: 50px;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 10% 90%;
+}
+.Home .navbar-wrapper .search-button-wrapper .search-icon{
+  background-color: #0773FF;
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+}
+
+.Home .navbar-wrapper .search-button-wrapper .search-icon img{
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.Home .navbar-wrapper .search-button-wrapper .search-bar-wrapper{
+  width: 0%;
+  margin-left: 0%;
+}
+.Home .navbar-wrapper .search-button-wrapper .search-bar-wrapper input{
+  transition: 0.3s;
+  width: 0%;
+  height: 100%;
+}
+.Home .navbar-wrapper .search-button-wrapper{
+  background-color: #0773FF;
+  height: 50px;
+  width: 50px;
+  text-align: center;
+}
+.Home .navbar-wrapper .search-button-wrapper img{
+  margin-top: 8px;
+  cursor: pointer;
+}
+.Home .navbar-wrapper .user-search-display{
+  transition: 0.9s;
+  overflow-x: hidden;
+  height: 100%;
+  width: 0%;
+  margin: 0;
+}
+.Home .navbar-wrapper .user-profile{
+  cursor: pointer;
+  margin-left: 3px;
+  margin-top: 12px;
+  height: 40px;
+  width: 40px;
+}
+.Home .navbar-wrapper .user-profile img{
+  border-radius: 25px;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+
+
+
+
+.Home .navbar-wrapper .user-search-display .user-info{
+  overflow:hidden ;
+  width: 100%;
+  height: 50px;
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+.Home .navbar-wrapper .user-search-display .user-picture-wrapper{
+  width: 40px;
+  height: 40px;
+}
+.Home .navbar-wrapper .user-search-display .user-picture-wrapper img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  
+}
+.Home .navbar-wrapper .user-search-display .user-info{
+  background-color: white;
+  width: 100%;
+  height: 50px;
+  border: 1px solid rgb(141, 141, 141);  
+}
+
+
+/* Active navbar */
+.Home .navbar-wrapper-active{
+  transition: 0.5s;
+  background-color: #303030;
+  width: 300px;
+  height: 100%;
+  position: fixed;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: 5% 90% 5%;
+  overflow: hidden ;
+}
+
+.Home .navbar-wrapper-active .search-button-wrapper{
+  height: 50px;
+  width: 100%;
+  text-align: center;
+  display: grid;
+  grid-template-columns: 10% 90%;
+}
+.Home .navbar-wrapper-active .search-button-wrapper .search-icon{
+  background-color: #0773FF;
+  width: 50px;
+  height: 50px;
+}
+
+.Home .navbar-wrapper-active .search-button-wrapper .search-icon img{
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.Home .navbar-wrapper-active .search-button-wrapper .search-bar-wrapper{
+  transition: 0.5s;
+  width: 93%;
+  margin-left: 7.5%;
+}
+.Home .navbar-wrapper-active .search-button-wrapper .search-bar-wrapper input{
+  padding-left: 4px;
+  padding-right: 5px;
+  transition: 0.5s;
+  width: 100%;
+  height: 100%;
+  font-size: 20px;
+}
+.Home .navbar-wrapper-active .user-search-display{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  margin-top:10px ;
+  overflow-y: scroll ;
+  scrollbar-color: #0773FF transparent;
+  scrollbar-width: thin;
+}
+.Home .navbar-wrapper-active .user-search-display .user-info{
+  overflow:hidden ;
+  width: 100%;
+  height: 50px;
+  display: grid;
+  grid-template-columns: 20% 80%;
+}
+.Home .navbar-wrapper-active .user-search-display .user-picture-wrapper{
+  width: 40px;
+  height: 40px;
+}
+.Home .navbar-wrapper-active .user-search-display .user-picture-wrapper img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+  
+}
+.Home .navbar-wrapper-active .user-search-display .user-info{
+  background-color: white;
+  width: 100%;
+  height: 50px;
+  border: 1px solid rgb(141, 141, 141);  
+}
+.Home .navbar-wrapper-active .user-profile{
+  cursor: pointer;
+  margin-top: 12px;
+  margin-left: 3px;
+  height: 40px;
+  width: 40px;
+}
+.Home .navbar-wrapper-active .user-profile img{
+  border-radius: 25px;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+.Home .navlinks{
+  text-decoration: none;
+  color: #303030;
+}
+.Home .navlinks:hover{
+  text-decoration: none;
 }
